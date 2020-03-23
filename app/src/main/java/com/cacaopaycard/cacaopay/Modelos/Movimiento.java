@@ -2,6 +2,8 @@ package com.cacaopaycard.cacaopay.Modelos;
 
 import android.graphics.Bitmap;
 
+import java.text.DecimalFormat;
+
 public class Movimiento {
 
     private Bitmap imagen;
@@ -31,10 +33,12 @@ public class Movimiento {
     }
 
     public Movimiento(String descripcion, Fecha fecha, String cantidad, boolean esTransferenciaRecibida){
+        DecimalFormat df = new DecimalFormat("'$'#.00");
+        this.montoTransferencia = df.format(Double.parseDouble(cantidad));
         this.fechaObject = fecha;
         this.descripcionTransferencia = descripcion;
-        this.montoTransferencia = cantidad;
         this.esTransferenciaRecibida = esTransferenciaRecibida;
+
 
     }
 
@@ -59,7 +63,8 @@ public class Movimiento {
     }
 
     public void setMontoTransferencia(String montoTransferencia) {
-        this.montoTransferencia = montoTransferencia;
+        DecimalFormat df = new DecimalFormat("'$'#.00");
+        this.montoTransferencia = df.format(Double.parseDouble(montoTransferencia));
     }
 
 
