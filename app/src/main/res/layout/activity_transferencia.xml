@@ -184,6 +184,58 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_rfc_beneficiario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            app:errorTextAppearance="@style/TextError"
+            android:hint="@string/str_rfc_curp_beneficiario"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true"
+            app:helperTextTextAppearance="@style/HelpText"
+
+            >
+            <EditText
+                android:id="@+id/edtxt_rfc_beneficiario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:inputType="textPersonName"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_email_beneficiario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            app:errorTextAppearance="@style/TextError"
+            android:hint="@string/str_email_beneficiario"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true"
+            app:helperTextTextAppearance="@style/HelpText"
+
+            >
+            <EditText
+                android:id="@+id/edtxt_email_beneficiario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:inputType="textPersonName"
+                android:maxLength="40"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_concepto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

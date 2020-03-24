@@ -94,6 +94,8 @@
     <string name="str_cuanto_deseas_transferir">¿Cuánto deseas transferir?</string>
     <string name="str_numero_de_referencia">Número de referencia <i>(opcional)</i></string>
     <string name="str_nombre_beneficiario">Nombre del beneficiario</string>
+    <string name="str_rfc_curp_beneficiario">RFC / CURP del beneficiario</string>
+    <string name="str_email_beneficiario">Email del beneficiario</string>
     <string name="str_concepto">Concepto</string>
     <string name="str_tarjeta_origen_de_transferencia">Tarjeta origen de transferencia</string>
     <string name="str_ingrese_pin_leyenda">Se envió un PIN de confirmación a tu correo/SMS ingrésalo aquí para continuar.</string>
