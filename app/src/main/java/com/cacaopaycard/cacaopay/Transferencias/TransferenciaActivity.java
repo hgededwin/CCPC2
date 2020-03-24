@@ -82,10 +82,14 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
 
         if (toTransfer == Constantes.CUENTAS_CACAO) {
             edtxtRFC.setVisibility(View.GONE);
+            tilRFC.setVisibility(View.GONE);
             edtxtEmail.setVisibility(View.GONE);
+            tilEmail.setVisibility(View.GONE);
         } else {
             edtxtRFC.setVisibility(View.VISIBLE);
             edtxtEmail.setVisibility(View.VISIBLE);
+            edtxtEmail.setVisibility(View.VISIBLE);
+            tilEmail.setVisibility(View.VISIBLE);
         }
 
         requestQueue = Volley.newRequestQueue(this);
@@ -98,9 +102,6 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
 
         if(edtxtNumCardSend.getRowText().isEmpty()){
             tilCard.setError("Debe llenar el campo");
-        } else if((!validacionBIN() && !esInterbancaria )|| tilCard.getError() != null && !esInterbancaria){
-            tilCard.setError("Ingrese una tarjeta válida");
-            edtxtNumCardSend.requestFocus();
         } else if(edtxtMonto.getRawValue() == 0){
             tilMonto.setError("Debe ingresar un monto");
         } else if(!edtxtNumRef.getText().toString().matches("[0-9]*")){
@@ -503,14 +504,13 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         tilReferencia = findViewById(R.id.til_numero_referencia);
         tilNomBene = findViewById(R.id.til_nombre_beneficiario);
         tilRFC = findViewById(R.id.til_rfc_beneficiario);
-        tilEmail = findViewById(R.id.til_email);
+        tilEmail = findViewById(R.id.til_email_beneficiario);
         edtxtNomBene = findViewById(R.id.edtxt_nombre_beneficiario_trf);
         txtNumCuentacv = findViewById(R.id.txt_numero_cuenta_cv);
         txtSaldo = findViewById(R.id.txt_saldo_tarjeta_cv_transferencia);
         edtxtEmail = findViewById(R.id.edtxt_email_beneficiario);
         edtxtRFC = findViewById(R.id.edtxt_rfc_beneficiario);
-
-
+        
         txtNumCuentacv.setText("**** " + numTarjetaEmisora.substring(12));
         txtSaldo.setText(strSaldo);
 
