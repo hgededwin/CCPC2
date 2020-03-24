@@ -33,6 +33,7 @@ public class CardInfoPresenter implements CardInfoInteractor.OnFinishCardInfoReq
 
     @Override
     public void onSuccessCardList(List<Tarjeta> cards) {
+        Log.i(TAG, "CArd is :" + cards.get(0).isEstaBloqueada());
         view.dismissProgress();
         view.showCards(cards);
     }

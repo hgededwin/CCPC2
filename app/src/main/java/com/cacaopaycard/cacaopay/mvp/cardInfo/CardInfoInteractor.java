@@ -16,6 +16,7 @@ import com.cacaopaycard.cacaopay.Modelos.Movimiento;
 import com.cacaopaycard.cacaopay.Modelos.Peticion;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
 import com.cacaopaycard.cacaopay.Modelos.Usuario;
+import com.cacaopaycard.cacaopay.Utils.Format;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -106,11 +107,7 @@ public class CardInfoInteractor {
                 requestN.dismissProgressDialog();
                 try {
                     Log.e(TAG,response.toString());
-                    String sinDiag = response.toString().replaceAll("\\\\", "");
-                    String reformatRight = sinDiag.replaceAll("\"[{]","{");
-                    String reformatleftt = reformatRight.replaceAll("[}]\"","}");
-                    Log.e(TAG, "reformat" + reformatleftt);
-                    JSONObject newResponse = new JSONObject(reformatleftt);
+                    JSONObject newResponse = Format.toSintaxJSON(response);
 
                     processResponse(newResponse, service, context);
                 } catch (JSONException e) {
@@ -176,7 +173,7 @@ public class CardInfoInteractor {
                 jsonResponse.getString("DescripcionStatus"),
                 jsonResponse.getString("CuentaCacao"),
                 jsonResponse.getString("FechaVigencia"),
-                String.valueOf(jsonSaldo.getString("Saldo"))
+                jsonSaldo.getString("Saldo")
         );
 
         cardList.add(card);

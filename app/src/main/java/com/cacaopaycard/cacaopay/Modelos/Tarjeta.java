@@ -85,10 +85,7 @@ public class Tarjeta implements Serializable{
         this.fechaVigencia = fechaVigencia;
         if (indiceColosr != 2) indiceColosr++; else indiceColosr = 0;
         this.color = colors[indiceColosr];
-        if (descStatus.equals("ACTIVA"))
-            estaBloqueada = false;
-        else
-            estaBloqueada = true;
+        estaBloqueada = !descStatus.equals("ACTIVA");
 
     }
 
@@ -212,10 +209,10 @@ public class Tarjeta implements Serializable{
 
     public void setEstado(String estado) {
         this.estado = estado;
-        if (!estado.equals("ACTIVA")){
-            setEstaBloqueada(true);
-        } else {
+        if (estado.equals("ACTIVA")){
             setEstaBloqueada(false);
+        } else {
+            setEstaBloqueada(true);
         }
     }
 

@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         >
         <ImageView
             android:id="@+id/img_agregar_tarjetas"

@@ -11,6 +11,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.cacaopaycard.cacaopay.Modelos.Peticion;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
+import com.cacaopaycard.cacaopay.Utils.Format;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,11 +96,7 @@ public class CardInteractor {
                 Log.e(TAG, response.toString());
                 try {
                     Log.e(TAG,response.toString());
-                    String sinDiag = response.toString().replaceAll("\\\\", "");
-                    String reformatRight = sinDiag.replaceAll("\"[{]","{");
-                    String reformatleftt = reformatRight.replaceAll("[}]\"","}");
-                    Log.e(TAG, "reformat" + reformatleftt);
-                    JSONObject newResponse = new JSONObject(reformatleftt);
+                    JSONObject newResponse = Format.toSintaxJSON(response);
 
                     JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
                     String codRespuesta = responseCacaoAPI.getString("CodRespuesta");

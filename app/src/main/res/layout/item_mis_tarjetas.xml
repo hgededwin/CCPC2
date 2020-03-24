@@ -79,15 +79,16 @@
             app:srcCompat="@drawable/ic_edit_item_white"
             android:layout_marginLeft="30dp"
             />
+
         <ImageView
             android:id="@+id/img_eliminar_item_cv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_delete_item_white"
             android:layout_marginLeft="30dp"
-            />
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_delete_item_white" />
 
     </LinearLayout>
 

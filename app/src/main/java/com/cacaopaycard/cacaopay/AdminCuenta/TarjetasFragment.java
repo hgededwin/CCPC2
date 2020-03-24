@@ -36,6 +36,7 @@ import com.cacaopaycard.cacaopay.Modelos.Singleton;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
 import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.R;
+import com.cacaopaycard.cacaopay.Utils.Format;
 import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 
 import org.json.JSONArray;
@@ -118,11 +119,7 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
                 peticionLockunlock.dismissProgressDialog();
                 try {
 
-                    String sinDiag = response.toString().replaceAll("\\\\", "");
-                    String reformatRight = sinDiag.replaceAll("\"[{]","{");
-                    String reformatleftt = reformatRight.replaceAll("[}]\"","}");
-                    Log.e(TAG, "reformat" + reformatleftt);
-                    JSONObject newResponse = new JSONObject(reformatleftt);
+                    JSONObject newResponse = Format.toSintaxJSON(response);
 
                     JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
                     String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
@@ -251,8 +248,6 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
             //btnEditarTarjetas.setText(R.string.str_editar);
             editando = false;
         } else {
-
-
             adaptadorSeleccion = new TarjetaAdapter(tarjetas, listener, getContext());
             rvTarjetas.setAdapter(adaptadorSeleccion);
             //btnEditarTarjetas.setText(R.string.str_cancelar);
@@ -277,11 +272,7 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
                 requestN.dismissProgressDialog();
                 try {
                     Log.e(TAG,response.toString());
-                    String sinDiag = response.toString().replaceAll("\\\\", "");
-                    String reformatRight = sinDiag.replaceAll("\"[{]","{");
-                    String reformatleftt = reformatRight.replaceAll("[}]\"","}");
-                    Log.e(TAG, "reformat" + reformatleftt);
-                    JSONObject newResponse = new JSONObject(reformatleftt);
+                    JSONObject newResponse = Format.toSintaxJSON(response);
 
                     String jsonDesc = newResponse.getString("ResponseCode");
                     JSONObject jsonResponse = newResponse.getJSONObject("ResponseCacaoAPI");
@@ -296,7 +287,7 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
                                 jsonResponse.getString("DescripcionStatus"),
                                 jsonResponse.getString("CuentaCacao"),
                                 jsonResponse.getString("FechaVigencia"),
-                                String.valueOf(jsonSaldo.getString("Saldo"))
+                                jsonSaldo.getString("Saldo")
                         );
                         tarjetas.add(card);
                         tarjetaAdapter.notifyDataSetChanged();

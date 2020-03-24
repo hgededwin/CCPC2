@@ -55,7 +55,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
 
         card = (Tarjeta) getArguments().getSerializable("card");
 
-        Log.i(TAG, card.getNumeroCuenta());
+        Log.i(TAG, "Numero de cuenta" + card.getNumeroCuenta() + card.isEstaBloqueada());
         switchCompat.setOnCheckedChangeListener(this);
         return view;
     }
@@ -105,7 +105,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        Log.i(TAG, "onCheckedChanged");
+        Log.i(TAG, "onCheckedChanged " + isSettingPreviousState);
         if (!isSettingPreviousState){
             //  On switch click
             int content = estaBloqueada ? R.string.str_confirmacion_desbloqueo : R.string.str_confirmacion_bloqueo;
@@ -132,8 +132,6 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
                     .show();
         } else {
             isSettingPreviousState = false;
-
-
         }
 
     }

@@ -3,6 +3,7 @@ package com.cacaopaycard.cacaopay.AdminCuenta.Tarjetas;
 import android.content.Intent;
 import androidx.annotation.Nullable;
 
+import com.cacaopaycard.cacaopay.Utils.Format;
 import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,20 +126,21 @@ public class EditarTarjetaActivity extends AppCompatActivity {
         requestChangeNIP.addParamsString("Tarjeta", numeroTarjeta);
         requestChangeNIP.addParamsString("NIPNuevo", edtxtNip.getText().toString());
 
-        requestChangeNIP.stringRequest(Request.Method.POST, URLCacao.URL_CAMBIAR_NIP, new Response.Listener<String>() {
+        requestChangeNIP.jsonObjectRequest(Request.Method.POST, URLCacao.URL_CAMBIAR_NIP, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONObject response) {
                 requestChangeNIP.dismissProgressDialog();
-                Log.e(Constantes.TAG, response);
-
+                Log.e(Constantes.TAG, response.toString());
                 try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    int success = jsonObject.getInt("succes");
-                    String message = jsonObject.getString("message");
+                    JSONObject newFormat = Format.toSintaxJSON(response);
+
+                    JSONObject responseCacaoAPI = newFormat.getJSONObject("ResponseCacaoAPI");
+                    String codeRespueste = responseCacaoAPI.getString("CodRespuesta");
+                    String descRespuesta = responseCacaoAPI.getString("DescRespuesta");
                     System.out.println("Card edited:"+ numeroTarjeta);
 
-                    if(success == 1){
-                        Log.i(Constantes.TAG, message);
+                    if(codeRespueste.equals("0000")){
+                        Log.i(Constantes.TAG, descRespuesta);
 
                         Intent editarSuce = new Intent(EditarTarjetaActivity.this, RegistroExitosoActivity.class);
                         editarSuce.putExtra("padre", EDITAR_TARJETA);
@@ -148,21 +150,18 @@ public class EditarTarjetaActivity extends AppCompatActivity {
 
                     } else{
                         Log.e(Constantes.TAG, "Error en la petición al editar tarjeta.");
-                        Log.e(Constantes.TAG,message);
+                        Log.e(Constantes.TAG,descRespuesta);
                         new MaterialDialog.Builder(EditarTarjetaActivity.this)
                                 .positiveText("Ok")
-                                .content(message)
+                                .content(descRespuesta)
                                 .show();
-
                     }
-
                     // método temporal para pasar a la siguiente vista
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.e(Constantes.TAG,e.toString());
                 }
-
             }
         });
 
