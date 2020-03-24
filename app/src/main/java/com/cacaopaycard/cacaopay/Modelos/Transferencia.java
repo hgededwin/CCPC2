@@ -59,7 +59,7 @@ public class Transferencia implements Serializable {
     }
 
     public String getCuentaOrigen() {
-        return "**** " + cuentaOrigen.substring(12);
+        return "**** " + cuentaOrigen.replaceAll(" ","").substring(12);
     }
 
     public void setCuentaOrigen(String cuentaOrigen) {

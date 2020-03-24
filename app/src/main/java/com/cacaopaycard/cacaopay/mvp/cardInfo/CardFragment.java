@@ -67,14 +67,24 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
 
     @Override
     public void showCardInfo(Tarjeta card) {
-
-        Log.e("TAG","showing card info");
+        // isSettingPreviousState = true;
+        Log.e("TAG","showing card info...isLock: " + card.isEstaBloqueada());
         saldo.setText(card.getSaldo());
         numCuenta.setText(card.getTarjetaOfuscada());
         switchCompat.setChecked(card.isEstaBloqueada());
 
         if(card.isEstaBloqueada()) showCardLocked();
         else showCardUnLocked();
+
+        /*if(card.isEstaBloqueada()){
+            showCardLocked();
+            isSettingPreviousState = true;
+        } else {
+            showCardUnLocked();
+        }
+
+        switchCompat.setChecked(card.isEstaBloqueada());*/
+
     }
 
     @Override
@@ -105,7 +115,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        Log.i(TAG, "onCheckedChanged " + isSettingPreviousState);
+        Log.i(TAG, "isSettingPreviousState: " + isSettingPreviousState);
         if (!isSettingPreviousState){
             //  On switch click
             int content = estaBloqueada ? R.string.str_confirmacion_desbloqueo : R.string.str_confirmacion_bloqueo;

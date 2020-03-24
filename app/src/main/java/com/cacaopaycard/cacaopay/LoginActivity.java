@@ -237,6 +237,7 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e(TAG, e.toString());
+
                 }
             }
         }, new Response.ErrorListener() {
@@ -249,6 +250,12 @@ public class LoginActivity extends AppCompatActivity {
                     new MaterialDialog.Builder(LoginActivity.this)
                             .content("Contraseña incorrecta")
                             .positiveText("OK")
+                            .show();
+                } else{
+                    new MaterialDialog.Builder(LoginActivity.this)
+                            .title("Error")
+                            .content("Ocurrió un error inesperado")
+                            .positiveText("Ok")
                             .show();
                 }
             }

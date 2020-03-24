@@ -130,12 +130,13 @@ public class CardInfoInteractor {
     private void processResponse(JSONObject response, WebService service, Context context) throws JSONException {
 
         Log.i(TAG,"processResponse");
-        String jsonDesc = response.getString("ResponseCode");
+        JSONObject responseCacaoAPI = response.getJSONObject("ResponseCacaoAPI");
+        String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
 
-        final String SUCCESS = "00";
+        final String SUCCESS = "0000";
         //final int FAIL = 0;
 
-        switch (jsonDesc){
+        switch (codRespuesta){
 
             case SUCCESS:
 

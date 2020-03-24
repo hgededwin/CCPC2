@@ -37,11 +37,12 @@ public class CardInteractor {
     }
 
     public void setCardValues(Tarjeta card, final CardBalanceRequest listener){
+        this.listener = listener;
         this.mCard = card;
         //mCard.setSaldo(card.getSaldo());
         mCard.setEstado(card.getDescStatus());
         //mCard.setStp(stp);
-        listener.onSuccess(mCard);
+        this.listener.onSuccess(mCard);
     }
 
     public void getCardBalance(final Tarjeta card, final CardBalanceRequest listener){
