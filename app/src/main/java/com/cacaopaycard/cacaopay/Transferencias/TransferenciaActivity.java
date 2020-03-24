@@ -3,6 +3,8 @@ package com.cacaopaycard.cacaopay.Transferencias;
 import android.content.Intent;
 import androidx.annotation.Nullable;
 
+import com.android.volley.VolleyError;
+import com.cacaopaycard.cacaopay.LoginActivity;
 import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.fragment.app.DialogFragment;
@@ -52,8 +54,8 @@ public class TransferenciaActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView txtNumCuentacv, txtSaldo;
-    private EditText edtxtNumRef, edtxtConcepto, edtxtNomBene;
-    private TextInputLayout tilCard, tilConcepto, tilMonto, tilReferencia, tilNomBene;
+    private EditText edtxtNumRef, edtxtConcepto, edtxtNomBene, edtxtRFC, edtxtEmail;
+    private TextInputLayout tilCard, tilConcepto, tilMonto, tilReferencia, tilNomBene, tilRFC, tilEmail;
     private MaskEditText edtxtNumCardSend;
     private CurrencyEditText edtxtMonto;
     private List<String> tipoCuentas = new ArrayList(){{add("Cuenta CLABE"); add("Tarjeta CACAO");}};
@@ -61,6 +63,7 @@ public class TransferenciaActivity extends AppCompatActivity {
     private Usuario usuario;
     private boolean esInterbancaria = false;
     private String numTarjetaEmisora, strNumTelefomo, strSaldo;
+    private int toTransfer = 0;
     private final String TAG = "TRANSFERENCIAPROPIAS";
 private final String TAG_SPEI = "TRANSFERENCIASPEI";
 
@@ -72,7 +75,18 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         numTarjetaEmisora = getIntent().getStringExtra("num_tarjeta_emisora");
         strNumTelefomo = getIntent().getStringExtra("telefono_transfer");
         strSaldo = getIntent().getStringExtra("saldo");
+        toTransfer = getIntent().getIntExtra("tipo_transfer", Constantes.CUENTAS_CACAO);
+
         setUpUI();
+
+
+        if (toTransfer == Constantes.CUENTAS_CACAO) {
+            edtxtRFC.setVisibility(View.GONE);
+            edtxtEmail.setVisibility(View.GONE);
+        } else {
+            edtxtRFC.setVisibility(View.VISIBLE);
+            edtxtEmail.setVisibility(View.VISIBLE);
+        }
 
         requestQueue = Volley.newRequestQueue(this);
         usuario = new Usuario(this);
@@ -80,6 +94,8 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
     }
 
     public void onClickHacerTransferencia(View view) {
+        Log.e("ENTRANDO CLICLK --->", "");
+
         if(edtxtNumCardSend.getRowText().isEmpty()){
             tilCard.setError("Debe llenar el campo");
         } else if((!validacionBIN() && !esInterbancaria )|| tilCard.getError() != null && !esInterbancaria){
@@ -93,12 +109,12 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
             tilConcepto.setError("Debe ingresar un concepto");
         } else if(edtxtNomBene.getText().toString().isEmpty()){
             tilNomBene.setError("Debes de ingresar un nombre de beneficiario");
-        } else if(!esInterbancaria){
+        } else if(toTransfer == Constantes.CUENTAS_CACAO){
 
             Log.i(Constantes.TAG, "No es interbancaria");
             initTransferOwnerRequest();
 
-        } else{
+        } else {
             Log.i(Constantes.TAG, "Es interbancaria");
             transferThirdsRequest();
 
@@ -159,77 +175,82 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         System.out.println("......initTransferOwnerRequest");
 
         final Peticion peticionTransfer = new Peticion(this,requestQueue);
-       /* peticionTransfer.addParamsString(getString(R.string.tarjeta_emisora_param), numTarjetaEmisora);
-        peticionTransfer.addParamsString(getString(R.string.tarjeta_receptora_param),edtxtNumCardSend.getRowText());
-        peticionTransfer.addParamsString(getString(R.string.monto_param), edtxtMonto.getText().toString().replaceAll("[$|,]",""));
-        peticionTransfer.addParamsString(getString(R.string.num_refer_param), edtxtNumRef.getText().toString());
-        peticionTransfer.addParamsString(getString(R.string.app_id_params),APP_ID);
-        peticionTransfer.addParamsString(getString(R.string.phone_params), usuario.getTelefono()); */
+
 
         peticionTransfer.addParamsString("TarjetaOrigen", numTarjetaEmisora);
         peticionTransfer.addParamsString("TarjetaDestino", edtxtNumCardSend.getRowText());
-        peticionTransfer.addParamsString("Importe", edtxtNumCardSend.getText().toString().replaceAll("[$|,]", ""));
-        peticionTransfer.addParamsString("ClaveMovimiento", "");
+        peticionTransfer.addParamsString("Importe", edtxtMonto.getText().toString().replaceAll("[$|,]",""));
+        peticionTransfer.addParamsString("ClaveMovimiento", "PB89");
         peticionTransfer.addParamsString("RefNumerica", edtxtNumRef.getText().toString());
         peticionTransfer.addParamsString("Observaciones", "N/A");
 
-        peticionTransfer.jsonObjectRequest(Request.Method.POST, URLCacao.URL_TRANSFERENCIAS_CACAO, new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                peticionTransfer.dismissProgressDialog();
-                Log.e(TAG,response.toString());
+        peticionTransfer.jsonObjectRequest(Request.Method.POST, URLCacao.URL_TRANSFERENCIAS_CACAO, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        peticionTransfer.dismissProgressDialog();
+                        Log.e(TAG, response.toString());
 
-                try {
-                    System.out.println("Response..." );
-                    JSONObject jsonObject = new JSONObject(response.toString());
-                    System.out.println("....jsonObject:" + jsonObject);
-                    int success = jsonObject.getInt("succes");
-                    String message = jsonObject.getString("message");
+                        try {
+                            String responseCode = response.getString("ResponseCode");
+                            String message = response.getString("Mensaje");
+                            if (responseCode.equals("00")) {
+                                Intent intent = new Intent(TransferenciaActivity.this, TransferenciaExitosaActivity.class);
 
-                    if (success == 1){
-                        Log.i(Constantes.TAG, message);
+                                Transferencia transferenciaRealizada = new Transferencia();
 
-                        JSONObject datos = jsonObject.getJSONObject("datos");
+                                Date date = new Date();
 
-                        final String idTrx = String.valueOf(datos.getInt("id"));
-                        final String idClient = String.valueOf(datos.getInt("admin_user_id"));
+                                //  fecha
+                                transferenciaRealizada.setFecha(new SimpleDateFormat("dd/MMM/yyyy").format(date));
+                                //  HORA
+                                transferenciaRealizada.setHora(new SimpleDateFormat("h:mm a").format(date));
+                                //  DESTINO NOMBRE
+                                transferenciaRealizada.setNombredestino(edtxtNomBene.getText().toString());
+                                //  DESTINO ACC
+                                transferenciaRealizada.setCuentaDestino(edtxtNumCardSend.getText().toString());
 
-                        DialogFragmentPIN dialog = DialogFragmentPIN.instanceDialog(TransferenciaActivity.this,new DialogFragmentPIN.DialogPositive() {
-                            @Override
-                            public void listenerPositiveText(DialogFragment dialog, String otp) {
+                                //  CANTIDAD
+                                transferenciaRealizada.setMonto(edtxtMonto.getText().toString());
 
-                                System.out.println("...OTP _transfer:"+ otp);
-                                confirmTransferOwner(idTrx,idClient,otp);
+                                //  CUENTA ORIGEN
+                                transferenciaRealizada.setCuentaOrigen(numTarjetaEmisora);
 
+                                //  RASTREO
+                                transferenciaRealizada.setNumeroRastreo("XXXXXXX");
+
+                                intent.putExtra("datos_transferecias", (Serializable) transferenciaRealizada);
+                                intent.putExtra("tipo_transfeencia", Enums.DEBITO);
+                                startActivityForResult(intent, TRANSFERENCIA);
+                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                            } else {
+
+                                Intent intentFallido = new Intent(TransferenciaActivity.this, TransferenciaFallidaActivity.class);
+                                intentFallido.putExtra("failure_message", message);
+                                startActivityForResult(intentFallido, TRANSFERENCIA_FALLIDA);
+                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
                             }
-                        }, getString(R.string.str_ingrese_pin_leyenda), getString(R.string.str_pin));
-                        dialog.show(getSupportFragmentManager(), "CacaoPay");
-
-
-
-                    } else {
-                        Log.e(Constantes.TAG, message);
+                        } catch (Exception e) {
+                            Intent intentFallido = new Intent(TransferenciaActivity.this, TransferenciaFallidaActivity.class);
+                            intentFallido.putExtra("failure_message", "Ha ocurrido un error. Inténtalo nuevamente");
+                            startActivityForResult(intentFallido, TRANSFERENCIA_FALLIDA);
+                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
                         new MaterialDialog.Builder(TransferenciaActivity.this)
-                                .content(message)
-                                .positiveText("OK")
-                                .cancelable(false)
+                                .title("Error")
+                                .content("Ha ocurrido un error. Inténtalo nuevamente.")
+                                .positiveText("Ok")
                                 .show();
-
                     }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
-
-
-
+        );
     }
 
-    public void confirmTransferOwner(String trx,String idClient, String otp){
+  /*  public void confirmTransferOwner(String trx,String idClient, String otp){
 
         System.out.println("....confirmTransferOwner");
         final Peticion peticionTrx = new Peticion(this, requestQueue);
@@ -301,7 +322,7 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
             }
         });
 
-    }
+    }*/
 
 
     // implementar con jsonObject por por tipos de datos distintos entre si.
@@ -310,35 +331,28 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         System.out.println("Monto: " + edtxtMonto.getText().toString().replaceAll("[$|,]","")  + " Decimal: " + edtxtMonto.getDecimalDigits());
 
         final Peticion peticionTransferOthers = new Peticion(this,requestQueue);
-       /* peticionTransferOthers.addParamsString(getString(R.string.monto_param),edtxtMonto.getText().toString().replaceAll("[$|,]",""));
-        peticionTransferOthers.addParamsString(getString(R.string.concepto_param),edtxtConcepto.getText().toString());
-        peticionTransferOthers.addParamsString(getString(R.string.referencia_numerica_param),edtxtNumRef.getText().toString());
-        peticionTransferOthers.addParamsString(getString(R.string.nombre_beneficiario_param), edtxtNomBene.getText().toString());
-        peticionTransferOthers.addParamsString(getString(R.string.tarjeta_emisora_2_param),numTarjetaEmisora);
-        peticionTransferOthers.addParamsString(getString(R.string.cuenta_beneficiario), edtxtNumCardSend.getRowText());
-        peticionTransferOthers.addParamsString(getString(R.string.phone_params), strNumTelefomo);
-        peticionTransferOthers.addParamsString(getString(R.string.app_id_params), APP_ID); */
 
         peticionTransferOthers.addParamsString("Tarjeta", numTarjetaEmisora);
         peticionTransferOthers.addParamsString("NombreBeneficiario", edtxtNomBene.getText().toString());
         peticionTransferOthers.addParamsString("CuentaBeneficiario", edtxtNumCardSend.getText().toString());
-        peticionTransferOthers.addParamsString("RfcCurpBeneficiario", "RFC DE ALGN LUGAR");
+        peticionTransferOthers.addParamsString("RfcCurpBeneficiario", edtxtRFC.getText().toString());
         peticionTransferOthers.addParamsString("ConceptoPago", edtxtConcepto.getText().toString());
         peticionTransferOthers.addParamsString("ReferenciaNumerica", edtxtNumRef.getText().toString());
-        peticionTransferOthers.addParamsString("Monto", edtxtMonto.getText().toString());
-        peticionTransferOthers.addParamsString("EMailBeneficiario", "NO EXISTE EMIAL BENEFICICARI INPUT");
+        peticionTransferOthers.addParamsString("Monto", edtxtMonto.getText().toString().replaceAll("[$|,]",""));
+        peticionTransferOthers.addParamsString("EMailBeneficiario", edtxtEmail.getText().toString());
 
-        peticionTransferOthers.jsonObjectRequest(Request.Method.POST, getString(R.string.url_tranfer_terceros), new Response.Listener() {
+        peticionTransferOthers.jsonObjectRequest(Request.Method.POST, URLCacao.URL_TRANSFERENCIA_SPEI, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(Object response) {
+            public void onResponse(JSONObject response) {
                 peticionTransferOthers.dismissProgressDialog();
-
+                Log.e(Constantes.TAG, response.toString());
                 try {
-                    JSONObject jsonObject = new JSONObject(response.toString());
-                    int success = jsonObject.getInt("success");
-                    String message = jsonObject.getString("message");
-                    Log.e(Constantes.TAG, jsonObject.toString());
-                    if(success == 1){
+                    String responseCode = response.getString("ResponseCode");
+                    String message = response.getString("Mensaje");
+
+                    Log.e(Constantes.TAG, response.toString());
+
+                    if(responseCode.equals("00")){
                         Log.i(Constantes.TAG, message);
                         Intent intent = new Intent(TransferenciaActivity.this, TransferenciaExitosaActivity.class);
                         Transferencia transferenciaRealizada  = new Transferencia();
@@ -373,20 +387,15 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
                     } else {
                         Log.e(Constantes.TAG, message);
 
-
-
                         Intent intentFallido = new Intent(TransferenciaActivity.this, TransferenciaFallidaActivity.class);
                         intentFallido.putExtra("failure_message", message);
                         startActivityForResult(intentFallido, TRANSFERENCIA_FALLIDA);
                         overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
 
@@ -493,10 +502,13 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         tilCard = findViewById(R.id.til_tarjeta_transfer);
         tilReferencia = findViewById(R.id.til_numero_referencia);
         tilNomBene = findViewById(R.id.til_nombre_beneficiario);
+        tilRFC = findViewById(R.id.til_rfc_beneficiario);
+        tilEmail = findViewById(R.id.til_email);
         edtxtNomBene = findViewById(R.id.edtxt_nombre_beneficiario_trf);
         txtNumCuentacv = findViewById(R.id.txt_numero_cuenta_cv);
         txtSaldo = findViewById(R.id.txt_saldo_tarjeta_cv_transferencia);
-
+        edtxtEmail = findViewById(R.id.edtxt_email_beneficiario);
+        edtxtRFC = findViewById(R.id.edtxt_rfc_beneficiario);
 
 
         txtNumCuentacv.setText("**** " + numTarjetaEmisora.substring(12));
@@ -620,7 +632,5 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
 
             }
         });
-
-
     }
 }
