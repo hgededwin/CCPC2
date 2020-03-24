@@ -142,7 +142,7 @@ public class ConsultasFragment extends Fragment implements CardInfoView, ViewPag
                 .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        int tipoTransferencia = which == 0 ? CUENTAS_CACAO: TERCEROS;
+                        int tipoTransferencia = which == 0 ? TERCEROS: CUENTAS_CACAO;
                         Intent intentTransferencias = new Intent(getContext(), TransferenciaActivity.class);
                         intentTransferencias.putExtra("telefono_transfer", usuario.getTelefono());
                         intentTransferencias.putExtra("num_tarjeta_emisora",getCurrentCard().getNumeroCuenta());
