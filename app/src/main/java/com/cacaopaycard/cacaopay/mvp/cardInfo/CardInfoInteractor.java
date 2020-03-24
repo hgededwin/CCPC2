@@ -84,7 +84,7 @@ public class CardInfoInteractor {
     /**
      * Request handler
      * */
-    private void requestData(final WebService service, JSONObject params, Context context){
+    private void requestData(final WebService service, JSONObject params, final Context context){
         String url = "";
 
         switch (service){
@@ -112,7 +112,7 @@ public class CardInfoInteractor {
                     Log.e(TAG, "reformat" + reformatleftt);
                     JSONObject newResponse = new JSONObject(reformatleftt);
 
-                    processResponse(newResponse, service);
+                    processResponse(newResponse, service, context);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     listener.onError("Ocurrió un error al procesar la información del usuario, por favor inténtalo de nuevo.");
@@ -130,7 +130,7 @@ public class CardInfoInteractor {
 
     }
 
-    private void processResponse(JSONObject response, WebService service) throws JSONException {
+    private void processResponse(JSONObject response, WebService service, Context context) throws JSONException {
 
         Log.i(TAG,"processResponse");
         String jsonDesc = response.getString("ResponseCode");
@@ -145,7 +145,7 @@ public class CardInfoInteractor {
                 switch (service){
                     case USER_DATA:
                         //processUserInfo(jsonObject.getJSONObject("message"));
-                        processUserCards(response);
+                        processUserCards(response, context);
 
                         break;
                     case CARD_MOVEMENTS:
@@ -163,7 +163,7 @@ public class CardInfoInteractor {
 
 
 
-    private void processUserCards(JSONObject cardInfo) throws JSONException {
+    private void processUserCards(JSONObject cardInfo,Context context) throws JSONException {
 
         List<Tarjeta> cardList = new ArrayList<>();
 
@@ -172,7 +172,7 @@ public class CardInfoInteractor {
         JSONObject jsonSaldo = jsonResponse.getJSONArray("SaldoActual").getJSONObject(0);
         System.out.println(jsonSaldo.toString());
         Tarjeta card = new Tarjeta(
-                jsonResponse.getString("Tarjeta"),
+                new Usuario(context).getNumTarjetaInicial(),
                 jsonResponse.getString("DescripcionStatus"),
                 jsonResponse.getString("CuentaCacao"),
                 jsonResponse.getString("FechaVigencia"),

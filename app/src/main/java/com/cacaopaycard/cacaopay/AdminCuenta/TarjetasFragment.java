@@ -292,7 +292,7 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
                         JSONObject jsonSaldo = jsonResponse.getJSONArray("SaldoActual").getJSONObject(0);
                         System.out.println(jsonSaldo.toString());
                         Tarjeta card = new Tarjeta(
-                                jsonResponse.getString("Tarjeta"),
+                                new Usuario(getContext()).getNumTarjetaInicial(),
                                 jsonResponse.getString("DescripcionStatus"),
                                 jsonResponse.getString("CuentaCacao"),
                                 jsonResponse.getString("FechaVigencia"),

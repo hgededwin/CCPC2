@@ -78,7 +78,7 @@ public class CardInteractor {
 
     public void lockCard(final boolean newStatus, final String card, final CardBalanceRequest listener){
 
-        final String urllockUnlockDesired = newStatus ? URL_DESBLOQUEAR_TARJETA: URL_BLOQUEAR_TARJETA;
+        final String urllockUnlockDesired = newStatus ? URL_BLOQUEAR_TARJETA: URL_DESBLOQUEAR_TARJETA;
         Log.e(TAG,urllockUnlockDesired);
         JSONObject jsonObject = new JSONObject();
         try {
@@ -94,10 +94,19 @@ public class CardInteractor {
             public void onResponse(JSONObject response) {
                 Log.e(TAG, response.toString());
                 try {
-                    String responseCode = response.getString("ResponseCode");
+                    Log.e(TAG,response.toString());
+                    String sinDiag = response.toString().replaceAll("\\\\", "");
+                    String reformatRight = sinDiag.replaceAll("\"[{]","{");
+                    String reformatleftt = reformatRight.replaceAll("[}]\"","}");
+                    Log.e(TAG, "reformat" + reformatleftt);
+                    JSONObject newResponse = new JSONObject(reformatleftt);
 
-                    switch (responseCode){
-                        case "00":
+                    JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
+                    String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
+
+
+                    switch (codRespuesta){
+                        case "0000":
                             System.out.println("...Éxito al bloqueardeblowuear");
                             listener.onLockUnlockSuccess(newStatus);
                             break;
