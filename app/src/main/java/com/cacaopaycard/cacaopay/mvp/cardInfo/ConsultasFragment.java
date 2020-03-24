@@ -19,9 +19,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.Volley;
 import com.cacaopaycard.cacaopay.Adapters.FechaAdapter;
 import com.cacaopaycard.cacaopay.Adapters.TarjetasDashboardAdapter;
+import com.cacaopaycard.cacaopay.Constantes;
 import com.cacaopaycard.cacaopay.Modelos.Fecha;
 import com.cacaopaycard.cacaopay.Modelos.Movimiento;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
@@ -36,6 +39,9 @@ import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 
 import static android.app.Activity.RESULT_OK;
+import static com.cacaopaycard.cacaopay.Constantes.CUENTAS_CACAO;
+import static com.cacaopaycard.cacaopay.Constantes.TERCEROS;
+import static com.cacaopaycard.cacaopay.Constantes.TRANSFERENCIA;
 
 public class ConsultasFragment extends Fragment implements CardInfoView, ViewPager.OnPageChangeListener, View.OnClickListener {
 
@@ -129,11 +135,28 @@ public class ConsultasFragment extends Fragment implements CardInfoView, ViewPag
 
     public void onClickTransferencias() {
 
-        Intent intentTransferencias = new Intent(getContext(), TransferenciaActivity.class);
-        intentTransferencias.putExtra("telefono_transfer", usuario.getTelefono());
-        intentTransferencias.putExtra("num_tarjeta_emisora",getCurrentCard().getNumeroCuenta());
-        intentTransferencias.putExtra("saldo", getCurrentCard().getSaldo());
-        startActivityForResult(intentTransferencias,0);
+        String[] items = {"TRANSFERNCIA INTERBANCARIA","TARJETAS CACAO"};
+
+        new MaterialDialog.Builder(getContext())
+                .items(items)
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        int tipoTransferencia = which == 0 ? CUENTAS_CACAO: TERCEROS;
+                        Intent intentTransferencias = new Intent(getContext(), TransferenciaActivity.class);
+                        intentTransferencias.putExtra("telefono_transfer", usuario.getTelefono());
+                        intentTransferencias.putExtra("num_tarjeta_emisora",getCurrentCard().getNumeroCuenta());
+                        intentTransferencias.putExtra("saldo", getCurrentCard().getSaldo());
+                        intentTransferencias.putExtra("tipo_transfer",tipoTransferencia);
+                        startActivityForResult(intentTransferencias,0);
+                        return false;
+                    }
+                })
+                .title("Selecciona el tipo de transferencia")
+                .positiveText("Ok")
+                .show();
+
+
 
     }
 

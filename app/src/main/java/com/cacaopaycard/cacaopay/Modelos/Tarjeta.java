@@ -43,7 +43,7 @@ public class Tarjeta implements Serializable{
     }
 
     public Tarjeta(String saldo, String numeroCuenta, String moneda, boolean estaBloqueada){
-        DecimalFormat df = new DecimalFormat("'$'#.00");
+        DecimalFormat df = new DecimalFormat("'$'0.00");
         this.saldo = df.format(Double.parseDouble(saldo));
         this.numeroCuenta = numeroCuenta;
         this.moneda = moneda;
@@ -55,7 +55,7 @@ public class Tarjeta implements Serializable{
 
     }
     public Tarjeta(String saldo, String numeroCuenta, String moneda, String bloqueoDesbloqueo){
-        DecimalFormat df = new DecimalFormat("'$'#.00");
+        DecimalFormat df = new DecimalFormat("'$'0.00");
         this.saldo = df.format(Double.parseDouble(saldo));
         this.numeroCuenta = numeroCuenta;
         this.moneda = moneda;
@@ -77,7 +77,7 @@ public class Tarjeta implements Serializable{
     }
 
     public Tarjeta(String card, String descStatus, String ctaCacao, String fechaVigencia, String saldo){
-        DecimalFormat df = new DecimalFormat("'$'#.00");
+        DecimalFormat df = new DecimalFormat("'$'0.00");
         this.saldo = df.format(Double.parseDouble(saldo));
         this.numeroCuenta = card;
         this.descStatus = descStatus;
@@ -98,7 +98,7 @@ public class Tarjeta implements Serializable{
     }
 
     public void setSaldo(String saldo) {
-        DecimalFormat df = new DecimalFormat("'$'#.00");
+        DecimalFormat df = new DecimalFormat("'$'0.00");
         this.saldo = df.format(Double.parseDouble(saldo));
     }
 

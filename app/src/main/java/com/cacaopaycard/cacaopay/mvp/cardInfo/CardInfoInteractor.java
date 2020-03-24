@@ -192,8 +192,16 @@ public class CardInfoInteractor {
 
         //  NO SE ESTAN MOSTRANDO MOVIMIENTOS EN TRANSITO
 
-        JSONArray arrayMovements = jsonObject.getJSONObject("ResponseCacaoAPI").getJSONArray("Movimientos");
-        Log.e(TAG,"MOVES_PROCESS:" + arrayMovements.toString());
+        JSONObject responseCacaoApi = jsonObject.getJSONObject("ResponseCacaoAPI");
+        JSONArray arrayMovements = null;
+        try{
+            arrayMovements = responseCacaoApi.getJSONArray("Movimientos");
+            Log.e(TAG,"MOVES_PROCESS:" + arrayMovements.toString());
+        } catch (JSONException e){
+            listener.onEmptyMovements();
+            return;
+        }
+
         if(arrayMovements.length() == 0){
             listener.onEmptyMovements();
             Log.e(TAG,"Empty");
@@ -231,6 +239,7 @@ public class CardInfoInteractor {
             listener.onSuccessCardMovements(movimientoList, fechas);
 
         }
+
     }
 
     public interface OnFinishCardInfoRequest {

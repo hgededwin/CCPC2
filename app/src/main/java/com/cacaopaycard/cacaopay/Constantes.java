@@ -18,4 +18,8 @@ public class Constantes {
     public final static String APP_ID = "CC";
     //public final static String APP_ID = "CON";
 
+
+    public final static int TERCEROS = 30;
+    public final static int CUENTAS_CACAO = 31;
+
 }
