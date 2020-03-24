@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity {
 
         usuario = new Usuario(this);
 
-        if(!usuario.getTelefono().isEmpty()){
-            edtxtTelefono.setText(usuario.getTelefono());
+        if(!usuario.getCorreo().isEmpty()){
+            edtxtTelefono.setText(usuario.getCorreo());
             edtxtTelefono.setEnabled(false);
             edtxtPassword.requestFocus();
 
@@ -223,7 +223,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     } else {
 
-                        String message = response.getString("message");
+                        String message = response.getString("Mensaje");
                         Log.e(Constantes.TAG, message);
 
                         new MaterialDialog.Builder(LoginActivity.this)
@@ -236,7 +236,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.e("Error", "error");
+                    Log.e(TAG, e.toString());
                 }
             }
         }, new Response.ErrorListener() {
@@ -244,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 peticionLogin.dismissProgressDialog();
-
+                System.out.println(error);
                 if(error instanceof AuthFailureError) {
                     new MaterialDialog.Builder(LoginActivity.this)
                             .content("Contraseña incorrecta")
