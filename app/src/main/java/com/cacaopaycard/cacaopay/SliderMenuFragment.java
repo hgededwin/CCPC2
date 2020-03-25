@@ -42,7 +42,6 @@ public class SliderMenuFragment extends Fragment {
         void listenerLockUnlock(boolean isLock);
     }
 
-
     public static SliderMenuFragment newInstance(Tarjeta tarjeta) {
 
         SliderMenuFragment fragment = new SliderMenuFragment();
