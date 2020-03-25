@@ -165,6 +165,7 @@ public class Peticion {
             }
 
         };
+
         if (mostrarProgressDialog)
             progressDialog.show();
         requestQueue.add(stringRequest);
@@ -187,6 +188,11 @@ public class Peticion {
         if (mostrarProgressDialog){
             progressDialog.show();
         }
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
         requestQueue.add(jsonObjectRequest);
 
     }
@@ -207,6 +213,11 @@ public class Peticion {
         if (mostrarProgressDialog){
             progressDialog.show();
         }
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
         requestQueue.add(jsonObjectRequest);
 
     }

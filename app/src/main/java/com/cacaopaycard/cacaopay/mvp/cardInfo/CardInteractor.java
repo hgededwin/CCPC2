@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static com.cacaopaycard.cacaopay.mvp.util.URLCacao.URL_BLOQUEAR_TARJETA;
 import static com.cacaopaycard.cacaopay.mvp.util.URLCacao.URL_CARD_BALANCE;
+import static com.cacaopaycard.cacaopay.mvp.util.URLCacao.URL_CONSULTA_TARJETA;
 import static com.cacaopaycard.cacaopay.mvp.util.URLCacao.URL_DESBLOQUEAR_TARJETA;
 import static com.cacaopaycard.cacaopay.mvp.util.URLCacao.URL_LOCK_CARD;
 
@@ -38,13 +39,47 @@ public class CardInteractor {
         this.requestQueue = requestQueue;
     }
 
-    public void setCardValues(Tarjeta card, final CardBalanceRequest listener){
+    public void setCardValues(final Tarjeta card, final Usuario usuario, final CardBalanceRequest listener){
         this.listener = listener;
         this.mCard = card;
-        //mCard.setSaldo(card.getSaldo());
-        mCard.setEstado(card.getDescStatus());
-        //mCard.setStp(stp);
-        this.listener.onSuccess(mCard);
+
+        JSONObject params = new JSONObject();
+        try {
+            params.put("Tarjeta", card.getNumeroCuenta());
+            params.put("Correo", usuario.getCorreo());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onError("Ocurrió un error al parsear los datos.");
+        }
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, URL_CONSULTA_TARJETA, params,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.i(TAG, "SetCardValues");
+                    processResponse(response.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    listener.onError("Ocurrió un error al procesar la información del usuario, por favor inténtalo de nuevo.");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.toString());
+                listener.onError("Ocurrió un error al obtener la información del ususario, por favor inténtalo de nuevo.");
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Token", usuario.getToken());
+                return headers;
+            }
+        };
+
+        requestQueue.add(request);
     }
 
     public void getCardBalance(final Tarjeta card, final CardBalanceRequest listener){
@@ -58,7 +93,7 @@ public class CardInteractor {
                     processResponse(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    listener.onError("Ocurrió un error al procesar la información del ususario, por favor inténtalo de nuevo.");
+                    listener.onError("Ocurrió un error al procesar la información del usuario, por favor inténtalo de nuevo.");
                 }
             }
         }, new Response.ErrorListener() {
@@ -143,18 +178,14 @@ public class CardInteractor {
     private void processResponse(String response) throws JSONException {
         JSONObject jsonObject = new JSONObject(response);
 
-        int success = jsonObject.getInt("succes");
+        String codRespuesta = jsonObject.getString("CodRespuesta");
 
-        final int SUCCESS = 1;
-        final int FAIL = 0;
+        final String SUCCESS = "0000";
 
-        switch (success){
+        switch (codRespuesta){
 
             case SUCCESS:
                 processCardBalance(jsonObject);
-                break;
-            case FAIL:
-                listener.onError(jsonObject.getString("message"));
                 break;
             default:
                 listener.onError("Ocurrió un error inesperado, por favor inténtalo de nuevo.");
@@ -163,13 +194,17 @@ public class CardInteractor {
     }
 
     private void processCardBalance(JSONObject jsonObject) throws JSONException {
-        String saldo = jsonObject.getString("saldo");
-        String estado = jsonObject.getString("estado");
-        String stp = jsonObject.getString("stp");
-        mCard.setSaldo(saldo);
-        mCard.setEstado(estado);
-        mCard.setStp(stp);
+
+        JSONObject jsonSaldo = jsonObject.getJSONArray("SaldoActual").getJSONObject(0);
+        System.out.println(jsonSaldo.toString());
+
+        mCard.setSaldo(jsonSaldo.getString("Saldo"));
+        mCard.setDescStatus(jsonObject.getString("DescripcionStatus"));
+        mCard.setCtaCacao(jsonObject.getString("CuentaCacao"));
+        mCard.setFechaVigencia(jsonObject.getString("FechaVigencia"));
+
         listener.onSuccess(mCard);
+
     }
 
 

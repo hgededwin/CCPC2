@@ -62,7 +62,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
     }
 
     public void getCardBalance(){
-        cardPresenter.getCardBalance(card);
+        cardPresenter.getCardBalance(card, new Usuario(getContext()));
     }
 
 

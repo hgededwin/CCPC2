@@ -156,8 +156,8 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         } else if(requestCode == TRANSFERENCIA_FALLIDA && resultCode == RESULT_OK){
             // reenviar transferencia
         } else if (requestCode == TRANSFERENCIA && resultCode == RESULT_OK){
-            this.setResult(RESULT_OK);
-            this.finish();
+            setResult(RESULT_OK);
+            finish();
         }
         else {
             finish();
@@ -193,12 +193,14 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         final Peticion peticionTransfer = new Peticion(this,requestQueue);
         Log.e(TAG, String.valueOf(edtxtMonto.getRawValue()));
 
+        peticionTransfer.addParamsString("Correo", usuario.getCorreo());
         peticionTransfer.addParamsString("TarjetaOrigen", numTarjetaEmisora);
         peticionTransfer.addParamsString("TarjetaDestino", edtxtNumCardSend.getRowText());
         peticionTransfer.addParamsString("Importe", edtxtMonto.getText().toString().replaceAll("[$|,]",""));
         peticionTransfer.addParamsString("ClaveMovimiento", "PB89");
         peticionTransfer.addParamsString("RefNumerica", edtxtNumRef.getText().toString());
         peticionTransfer.addParamsString("Observaciones", "NA");
+        peticionTransfer.addHeader("Token", usuario.getToken());
 
         peticionTransfer.jsonObjectRequest(Request.Method.POST, URLCacao.URL_TRANSFERENCIAS_CACAO, new Response.Listener<JSONObject>() {
                     @Override
@@ -207,11 +209,11 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
                         Log.e(TAG, response.toString());
 
                         try {
-                            JSONObject newResponse = Format.toSintaxJSON(response);
+                            //JSONObject newResponse = Format.toSintaxJSON(response);
 
-                            JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
-                            String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
-                            String descRespuesta = responseCacaoAPI.getString("DescRespuesta");
+                            //JSONObject responseCacaoAPI = response.getJSONObject("ResponseCacaoAPI");
+                            String codRespuesta = response.getString("CodRespuesta");
+                            String descRespuesta = response.getString("DescRespuesta");
 
                             if (codRespuesta.equals("0000")) {
                                 Intent intent = new Intent(TransferenciaActivity.this, TransferenciaExitosaActivity.class);
@@ -269,80 +271,6 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
                 }
         );
     }
-
-  /*  public void confirmTransferOwner(String trx,String idClient, String otp){
-
-        System.out.println("....confirmTransferOwner");
-        final Peticion peticionTrx = new Peticion(this, requestQueue);
-        peticionTrx.addParams(getString(R.string.trx_param),trx);
-        peticionTrx.addParams(getString(R.string.id_client_param),idClient); // ****
-        peticionTrx.addParams(getString(R.string.pin_param),otp);
-        peticionTrx.stringRequest(Request.Method.POST, getString(R.string.url_tranfer_send), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                peticionTrx.dismissProgressDialog();
-                Log.e("TAG",response);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    int success = jsonObject.getInt("succes");
-                    String message = jsonObject.getString("message");
-
-                    if(success == 1){
-                        Log.i(Constantes.TAG, "transfer owner account");
-
-                        Intent intent = new Intent(TransferenciaActivity.this, TransferenciaExitosaActivity.class);
-
-                        Transferencia transferenciaRealizada  = new Transferencia();
-
-                        Date date = new Date();
-
-                        //  fecha
-                        transferenciaRealizada.setFecha(new SimpleDateFormat("dd/MMM/yyyy").format(date));
-                        //  HORA
-                        transferenciaRealizada.setHora(new SimpleDateFormat("h:mm a").format(date));
-                        //  DESTINO NOMBRE
-                        transferenciaRealizada.setNombredestino(edtxtNomBene.getText().toString());
-                        //  DESTINO ACC
-                        transferenciaRealizada.setCuentaDestino(edtxtNumCardSend.getText().toString());
-
-                        //  CANTIDAD
-                        transferenciaRealizada.setMonto(edtxtMonto.getText().toString());
-
-                        //  CUENTA ORIGEN
-                        transferenciaRealizada.setCuentaOrigen(numTarjetaEmisora);
-
-                        //  RASTREO
-                        transferenciaRealizada.setNumeroRastreo("XXXXXXX");
-
-                        intent.putExtra("datos_transferecias", (Serializable) transferenciaRealizada);
-                        intent.putExtra("tipo_transfeencia", Enums.DEBITO);
-                        startActivityForResult(intent, TRANSFERENCIA);
-                        overridePendingTransition(R.anim.left_in, R.anim.left_out);
-
-                    } else{
-                        Log.e(Constantes.TAG, message);
-
-                        Intent intentFallido = new Intent(TransferenciaActivity.this, TransferenciaFallidaActivity.class);
-                        intentFallido.putExtra("failure_message", message);
-                        startActivityForResult(intentFallido, TRANSFERENCIA_FALLIDA);
-                        overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                    }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-
-                    Intent intentFallido = new Intent(TransferenciaActivity.this, TransferenciaFallidaActivity.class);
-                    //intentFallido.putExtra("failure_message", otpWrite);
-                    //intentFallido.getBundleExtra("");
-                    startActivityForResult(intentFallido, TRANSFERENCIA_FALLIDA);
-                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                }
-
-            }
-        });
-
-    }*/
 
 
     // implementar con jsonObject por por tipos de datos distintos entre si.

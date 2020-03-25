@@ -102,7 +102,7 @@ public class CardInfoInteractor {
                 break;
         }
 
-
+        Log.i("CardInfoInteractor", "requestN");
         final Peticion requestN = new Peticion(context, requestQueue);
         requestN.addHeader("Token", new Usuario(context).getToken());
         requestN.jsonObjectRequest(Request.Method.POST, url, params,new Response.Listener<JSONObject>() {
@@ -204,7 +204,6 @@ public class CardInfoInteractor {
             Log.e(TAG,"MOVES_PROCESS:" + arrayMovements.toString());
         } catch (JSONException e){
             listener.onEmptyMovements();
-            return;
         }
 
         if(arrayMovements.length() == 0){
