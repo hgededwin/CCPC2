@@ -29,8 +29,8 @@
 
 
     <!-- Verififcaion de código -->
-    <string name="str_verif_2_pasos">Verificación de número</string>
-    <string name="str_ingresar_codigo">Introduce el código de activación que te hemos enviado</string>
+    <string name="str_verif_2_pasos">Verificación de cuenta</string>
+    <string name="str_ingresar_codigo">Introduce el código de activación que te hemos enviado a tu correo electrónico</string>
     <string name="str_reenviar_codigo">Reenviar código por</string>
     <string name="str_sms">SMS</string>
     <string name="str_email_SMS">Email y SMS</string>
@@ -231,6 +231,8 @@
     <string name="id_client_param">id_client</string>
     <string name="pin_param">pin</string>
     <string name="status_desired_param">status_desired</string>
+    <string name="credencial_header">Credenciales</string>
+    <string name="token_header">Token</string>
 
     <string name="title_activity_main_container">MainContainer</string>
     <string name="title_home">Home</string>

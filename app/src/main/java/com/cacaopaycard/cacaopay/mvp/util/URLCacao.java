@@ -22,6 +22,7 @@ public class URLCacao {
     public final static String URL_TRANSFERENCIA_SPEI = HOST_NAME + API + "spei/out";
     public final static String URL_CAMBIAR_NIP = HOST_NAME + API + "tarjeta/asignar/nip";
     public final static String URL_MOVES = HOST_NAME + API + "tarjeta/consultar/movimientos";
+    public final static String URL_CONFIRMAR = HOST_NAME + API + "cuenta/confirmar";
 
     //private final static String HOST_NAME = "https://cocoa.cacaopaycard.com/";
     //private final static String HOST_NAME = "https://cocoa-staging.cacaopaycard.com/";
@@ -45,6 +46,7 @@ public class URLCacao {
     <string name="url_tranfer_send">https://cocoa.cacaopaycard.com/api/v1/transfer_send</string>
     <string name="url_init_transfer">https://cocoa.cacaopaycard.com/api/v1/transfer</string>
     <string name="url_lock_unlock">https://cocoa.cacaopaycard.com/api/v1/locks_blocks_cards</string>
-
      */
+
+    public static final String CREDENCIAL_API = "OEM1RUQxOTU5QzZBNDA2MTY0M0FGMENDM0YxOTRDODk1MzU1M0ExQUE4QUY2MzM3OkMzOTdEQUUxMzEzOThDMDVGREE3MTM1OTcxRkVBN0E4RTRBRjk0QUNGOTQwM0I0MA==";
 }

@@ -296,6 +296,13 @@ public class RegistroActivity extends AppCompatActivity {
             bundle.putString("tarjeta", edtxtNumeroTarjeta.getRowText());
             bundle.putString("nombre", edtxtNombre.getText().toString());
 
+            usuario.setTelefono(edtxtTelefono.getText().toString());
+            usuario.setNombreUsuario(edtxtNombre.getText().toString());
+            usuario.setCorreo(edtxtCorreo.getText().toString());
+            usuario.setNumTarjetaInicial(edtxtNumeroTarjeta.getRowText());
+
+            Log.e("NUMERO TARJETA -->", edtxtNumeroTarjeta.getRowText());
+
             Intent intent = new Intent(RegistroActivity.this, SetPasswordActivity.class);
             intent.putExtra("flujo", REGISTRO);
             intent.putExtra("registro", bundle); // bundle con información del registro
@@ -331,12 +338,15 @@ public class RegistroActivity extends AppCompatActivity {
                     System.out.println(jsonObject);
                     if(success == 1){
                         Log.i(Constantes.TAG, message);
-                        Intent intent = new Intent(RegistroActivity.this, VerificacionActivity.class);
-                        startActivityForResult(intent,REGISTRO);
-                        overridePendingTransition(R.anim.left_in,R.anim.left_out);
+
                         usuario.setTelefono(edtxtTelefono.getText().toString());
                         usuario.setNombreUsuario(edtxtNombre.getText().toString());
                         usuario.setCorreo(edtxtCorreo.getText().toString());
+
+                        Intent intent = new Intent(RegistroActivity.this, VerificacionActivity.class);
+                        startActivityForResult(intent,REGISTRO);
+                        overridePendingTransition(R.anim.left_in,R.anim.left_out);
+
 
                         //definir parámetros telefono, etc
 

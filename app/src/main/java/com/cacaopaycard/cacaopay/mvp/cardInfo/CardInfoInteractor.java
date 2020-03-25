@@ -17,6 +17,7 @@ import com.cacaopaycard.cacaopay.Modelos.Peticion;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
 import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.Utils.Format;
+import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +55,7 @@ public class CardInfoInteractor {
         JSONObject params = new JSONObject();
         try {
             params.put("Tarjeta", user.getNumTarjetaInicial());
+            params.put("Correo",user.getCorreo());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -71,6 +73,7 @@ public class CardInfoInteractor {
         String strDate =  mdformat.format(Calendar.getInstance().getTime());
         try {
             params.put("Tarjeta", card.getNumeroCuenta());
+            params.put("Correo", new Usuario(context).getCorreo());
             params.put("FechaInicial", "2020-03-01"); // fecha de movmiento
             params.put("FechaFinal", strDate);
             params.put("MaxMovimientos", "20");
@@ -99,17 +102,18 @@ public class CardInfoInteractor {
                 break;
         }
 
-
+        Log.i("CardInfoInteractor", "requestN");
         final Peticion requestN = new Peticion(context, requestQueue);
+        requestN.addHeader("Token", new Usuario(context).getToken());
         requestN.jsonObjectRequest(Request.Method.POST, url, params,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 requestN.dismissProgressDialog();
                 try {
                     Log.e(TAG,response.toString());
-                    JSONObject newResponse = Format.toSintaxJSON(response);
+                    //JSONObject newResponse = Format.toSintaxJSON(response);
 
-                    processResponse(newResponse, service, context);
+                    processResponse(response, service, context);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     listener.onError("Ocurrió un error al procesar la información del usuario, por favor inténtalo de nuevo.");
@@ -121,7 +125,7 @@ public class CardInfoInteractor {
             public void onErrorResponse(VolleyError error) {
                 requestN.dismissProgressDialog();
                 Log.e(TAG, error.toString());
-                listener.onError("Ocurrió un error al obtener la información del ususario, por favor inténtalo de nuevo.");
+                listener.onError("Ocurrió un error al obtener la información del usuario, por favor inténtalo de nuevo.");
             }
         });
 
@@ -130,12 +134,13 @@ public class CardInfoInteractor {
     private void processResponse(JSONObject response, WebService service, Context context) throws JSONException {
 
         Log.i(TAG,"processResponse");
-        String jsonDesc = response.getString("ResponseCode");
+        //JSONObject responseCacaoAPI = response.getJSONObject("ResponseCacaoAPI");
+        String codRespuesta = response.getString("CodRespuesta");
 
-        final String SUCCESS = "00";
+        final String SUCCESS = "0000";
         //final int FAIL = 0;
 
-        switch (jsonDesc){
+        switch (codRespuesta){
 
             case SUCCESS:
 
@@ -165,14 +170,14 @@ public class CardInfoInteractor {
         List<Tarjeta> cardList = new ArrayList<>();
 
         Log.i("InfoCard", cardInfo.toString());
-        JSONObject jsonResponse = cardInfo.getJSONObject("ResponseCacaoAPI");
-        JSONObject jsonSaldo = jsonResponse.getJSONArray("SaldoActual").getJSONObject(0);
+        //JSONObject jsonResponse = cardInfo.getJSONObject("ResponseCacaoAPI");
+        JSONObject jsonSaldo = cardInfo.getJSONArray("SaldoActual").getJSONObject(0);
         System.out.println(jsonSaldo.toString());
         Tarjeta card = new Tarjeta(
                 new Usuario(context).getNumTarjetaInicial(),
-                jsonResponse.getString("DescripcionStatus"),
-                jsonResponse.getString("CuentaCacao"),
-                jsonResponse.getString("FechaVigencia"),
+                cardInfo.getString("DescripcionStatus"),
+                cardInfo.getString("CuentaCacao"),
+                cardInfo.getString("FechaVigencia"),
                 jsonSaldo.getString("Saldo")
         );
 
@@ -192,14 +197,13 @@ public class CardInfoInteractor {
 
         //  NO SE ESTAN MOSTRANDO MOVIMIENTOS EN TRANSITO
 
-        JSONObject responseCacaoApi = jsonObject.getJSONObject("ResponseCacaoAPI");
+        //JSONObject responseCacaoApi = jsonObject.getJSONObject("ResponseCacaoAPI");
         JSONArray arrayMovements = null;
         try{
-            arrayMovements = responseCacaoApi.getJSONArray("Movimientos");
+            arrayMovements = jsonObject.getJSONArray("Movimientos");
             Log.e(TAG,"MOVES_PROCESS:" + arrayMovements.toString());
         } catch (JSONException e){
             listener.onEmptyMovements();
-            return;
         }
 
         if(arrayMovements.length() == 0){

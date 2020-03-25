@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,11 +18,14 @@ import com.cacaopaycard.cacaopay.Modelos.Peticion;
 import com.cacaopaycard.cacaopay.Modelos.Singleton;
 import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.R;
+import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URL;
 
 import static com.cacaopaycard.cacaopay.Constantes.APP_ID;
 import static com.cacaopaycard.cacaopay.Constantes.REGISTRO;
@@ -45,37 +49,98 @@ public class VerificacionActivity extends AppCompatActivity {
 
         otpCodigo = findViewById(R.id.otp_codigo);
         usuario = new Usuario(this);
+
+        Log.e("CORREO -->", usuario.getCorreo());
+        Log.e("numero cel -->", usuario.getTelefono());
+        Log.e("NUMERO TARJETA --->", usuario.getNumTarjetaInicial());
+
         otpCodigo.setOtpCompletionListener(new OnOtpCompletionListener() {
             @Override
             public void onOtpCompleted(String otp) {
                 // validar código
-                Intent intent = new Intent(VerificacionActivity.this, SetPasswordActivity.class);
-                intent.putExtra("flujo", REGISTRO);
-                intent.putExtra("pin", otp);
-                startActivityForResult(intent,REGISTRO);
-                overridePendingTransition(R.anim.left_in,R.anim.left_out);
 
             }
         });
     }
 
     public void onClickMandarCodigo(View view) {
-
-
-        if(otpCodigo.getText().toString().length() == 6) {
-
-            Intent intent = new Intent(this, SetPasswordActivity.class);
-            intent.putExtra("flujo", REGISTRO);
-            intent.putExtra("pin", otpCodigo.getText().toString());
-            startActivityForResult(intent, REGISTRO);
-            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if(otpCodigo.getText().toString().length() == 8) {
+            confirmarCuenta();
         }
     }
 
-    public void onClickCodigoEmail(View view) {
-        Toast.makeText(VerificacionActivity.this,"Se mandó el código a su email y teléfono",Toast.LENGTH_SHORT).show();
+    public void confirmarCuenta(){
 
-        reenvioPinVerificacionRequest();
+        final Peticion confirmarCuenta = new Peticion(this, requestQueue);
+        confirmarCuenta.addParamsString("NumeroCelular", usuario.getTelefono());
+        confirmarCuenta.addParamsString("Correo", usuario.getCorreo());
+        confirmarCuenta.addParamsString("Tarjeta", usuario.getNumTarjetaInicial());
+        confirmarCuenta.addParamsString("OTP", otpCodigo.getText().toString());
+
+confirmarCuenta.jsonObjectRequest(Request.Method.POST, URLCacao.URL_CONFIRMAR, new Response.Listener() {
+    @Override
+    public void onResponse(Object response) {
+        confirmarCuenta.dismissProgressDialog();
+        try {
+            JSONObject jsonObject = new JSONObject(String.valueOf(response));
+            Log.e(Constantes.TAG, response.toString());
+
+            String codeResponse = jsonObject.getString("ResponseCode");
+            String message = jsonObject.getString("Mensaje");
+
+            if (codeResponse.equals("00")){
+                usuario.registrarUsuario();
+                Intent intent = new Intent(VerificacionActivity.this, RegistroExitosoActivity.class);
+                intent.putExtra("flujo", REGISTRO);
+                startActivityForResult(intent, REGISTRO);
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+            } else {
+                Log.e(Constantes.TAG, message);
+                new  MaterialDialog.Builder(VerificacionActivity.this)
+                        .title("¡Error!")
+                        .content(message)
+                        .positiveText("Ok")
+                        .show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+});
+        /*
+         final Peticion peticionPin = new Peticion(this,requestQueue);
+        peticionPin.addParams(getString(R.string.phone_params), usuario.getTelefono());
+        peticionPin.addParams(getString(R.string.app_id_params),APP_ID);
+        peticionPin.stringRequest(Request.Method.POST, getString(R.string.url_reenvio_pin_registro), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                peticionPin.dismissProgressDialog();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    int success = jsonObject.getInt("succes");
+                    String message = jsonObject.getString("message");
+
+                    if(success == 1){
+                        // pin reenviado
+                        Log.i(Constantes.TAG, message);
+                        Toast.makeText(VerificacionActivity.this,"Se mandó el código a su teléfono",Toast.LENGTH_SHORT).show();
+
+                    } else
+                        Log.e(Constantes.TAG, message);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+         */
+    }
+
+    public void onClickCodigoEmail(View view) {
+      // Toast.makeText(VerificacionActivity.this,"Se mandó el código a su email y teléfono",Toast.LENGTH_SHORT).show();
+
+       // reenvioPinVerificacionRequest();
     }
 
 
@@ -99,7 +164,7 @@ public class VerificacionActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.right_in,R.anim.right_out);
     }
 
-    public void reenvioPinVerificacionRequest(){
+    /*public void reenvioPinVerificacionRequest(){
         final Peticion peticionPin = new Peticion(this,requestQueue);
         peticionPin.addParams(getString(R.string.phone_params), usuario.getTelefono());
         peticionPin.addParams(getString(R.string.app_id_params),APP_ID);
@@ -125,7 +190,7 @@ public class VerificacionActivity extends AppCompatActivity {
                 }
             }
         });
-    }
+    } */
 
     public void onClickObtenerAyuda(View view) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);

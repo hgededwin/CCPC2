@@ -62,7 +62,6 @@ public class SetPasswordActivity extends AppCompatActivity {
         bundleRegistro = getIntent().getBundleExtra("registro");
         //pin = getIntent().getStringExtra("pin");
         //System.out.println(".......PIN:" + pin);
-
         if(flujo == REGISTRO){
 
             //txtLeyendaPassword.setVisibility(View.GONE);
@@ -159,16 +158,17 @@ public class SetPasswordActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(String.valueOf(response));
                     Log.e(Constantes.TAG, response.toString());
 
-                    String email = jsonObject.getString("Correo");
+
                     String codeResponse = jsonObject.getString("ResponseCode");
                     String message = jsonObject.getString("Mensaje");
 
                     if(codeResponse.equals("00")){
                         Log.i(Constantes.TAG, message);
                         if(flujo == REGISTRO && !usuario.estaRegistrado()) {
-                            usuario.registrarUsuario();
-                            Intent intent = new Intent(SetPasswordActivity.this, RegistroExitosoActivity.class);
+
+                            Intent intent = new Intent(SetPasswordActivity.this, VerificacionActivity.class);
                             intent.putExtra("padre", REGISTRO);
+                            intent.putExtra("correo", bundleRegistro.getString("correo"));
 
                             usuario.setTelefono(bundleRegistro.getString("telefono"));
                             usuario.setNombreUsuario(bundleRegistro.getString("nombre"));

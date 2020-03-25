@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.Volley;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
+import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.R;
 
 public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.mvp.cardInfo.CardView, CompoundButton.OnCheckedChangeListener {
@@ -61,20 +62,30 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
     }
 
     public void getCardBalance(){
-        cardPresenter.getCardBalance(card);
+        cardPresenter.getCardBalance(card, new Usuario(getContext()));
     }
 
 
     @Override
     public void showCardInfo(Tarjeta card) {
-
-        Log.e("TAG","showing card info");
+        // isSettingPreviousState = true;
+        Log.e("TAG","showing card info...isLock: " + card.isEstaBloqueada());
         saldo.setText(card.getSaldo());
         numCuenta.setText(card.getTarjetaOfuscada());
+        //switchCompat.setChecked(card.isEstaBloqueada());
+
+        //if(card.isEstaBloqueada()) showCardLocked();
+        //else showCardUnLocked();
+
+        if(card.isEstaBloqueada()){
+            showCardLocked();
+            isSettingPreviousState = true;
+        } else {
+            showCardUnLocked();
+        }
+
         switchCompat.setChecked(card.isEstaBloqueada());
 
-        if(card.isEstaBloqueada()) showCardLocked();
-        else showCardUnLocked();
     }
 
     @Override
@@ -105,7 +116,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        Log.i(TAG, "onCheckedChanged " + isSettingPreviousState);
+        Log.i(TAG, "isSettingPreviousState: " + isSettingPreviousState);
         if (!isSettingPreviousState){
             //  On switch click
             int content = estaBloqueada ? R.string.str_confirmacion_desbloqueo : R.string.str_confirmacion_bloqueo;
@@ -115,7 +126,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             System.out.println("Respuesta positiva switch");
-                            cardPresenter.lockUnlockCard(!estaBloqueada, card.getNumeroCuenta());
+                            cardPresenter.lockUnlockCard(!estaBloqueada, card.getNumeroCuenta(), getContext());
                         }
                     })
                     .cancelable(false)
