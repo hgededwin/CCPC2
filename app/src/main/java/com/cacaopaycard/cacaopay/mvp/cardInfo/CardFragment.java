@@ -72,19 +72,19 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
         Log.e("TAG","showing card info...isLock: " + card.isEstaBloqueada());
         saldo.setText(card.getSaldo());
         numCuenta.setText(card.getTarjetaOfuscada());
-        switchCompat.setChecked(card.isEstaBloqueada());
+        //switchCompat.setChecked(card.isEstaBloqueada());
 
-        if(card.isEstaBloqueada()) showCardLocked();
-        else showCardUnLocked();
+        //if(card.isEstaBloqueada()) showCardLocked();
+        //else showCardUnLocked();
 
-        /*if(card.isEstaBloqueada()){
+        if(card.isEstaBloqueada()){
             showCardLocked();
             isSettingPreviousState = true;
         } else {
             showCardUnLocked();
         }
 
-        switchCompat.setChecked(card.isEstaBloqueada());*/
+        switchCompat.setChecked(card.isEstaBloqueada());
 
     }
 
