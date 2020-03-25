@@ -127,7 +127,6 @@
                 android:enabled="false"
                 android:inputType="phone"
                 android:focusableInTouchMode="false"
-                android:maxLength="10"
                 />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout

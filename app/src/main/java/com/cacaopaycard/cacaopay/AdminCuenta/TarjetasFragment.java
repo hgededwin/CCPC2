@@ -112,17 +112,18 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
         final Peticion peticionLockunlock = new Peticion(view.getContext(), requestQueue);
         peticionLockunlock.addParamsString("Tarjeta", currentCard);
         peticionLockunlock.addParamsString("MotivoBloqueo", "004");
-
+        peticionLockunlock.addParamsString("Correo", usuario.getCorreo());
+        peticionLockunlock.addHeader(getString(R.string.token_header), usuario.getToken());
         peticionLockunlock.jsonObjectRequest(Request.Method.POST, urlLockUnlockDesired, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 peticionLockunlock.dismissProgressDialog();
                 try {
 
-                    JSONObject newResponse = Format.toSintaxJSON(response);
+                    //JSONObject newResponse = Format.toSintaxJSON(response);
 
-                    JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
-                    String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
+                    // JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
+                    String codRespuesta = response.getString("CodRespuesta");
                     if(codRespuesta.equals("0000")){
                         System.out.println("bloqueo desbloqueo exitoso");
 
@@ -130,7 +131,7 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
                         tarjetaAdapter.notifyDataSetChanged();
 
                     } else {
-                        String descRespuesta = responseCacaoAPI.getString("DescRespuesta");
+                        String descRespuesta = response.getString("DescRespuesta");
                         Log.e(Constantes.TAG, descRespuesta);
                         new MaterialDialog.Builder(view.getContext())
                                 .content(descRespuesta)
@@ -266,33 +267,35 @@ public class TarjetasFragment extends Fragment implements View.OnClickListener {
         tarjetas.clear();
         final Peticion requestN = new Peticion(getContext(), requestQueue);
         requestN.addParamsString("Tarjeta", usuario.getNumTarjetaInicial());
+        requestN.addParamsString("Correo", usuario.getCorreo());
+        requestN.addHeader(getString(R.string.token_header),usuario.getToken());
         requestN.jsonObjectRequest(Request.Method.POST, URLCacao.URL_CONSULTA_TARJETA,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 requestN.dismissProgressDialog();
                 try {
                     Log.e(TAG,response.toString());
-                    JSONObject newResponse = Format.toSintaxJSON(response);
+                    //JSONObject newResponse = Format.toSintaxJSON(response);
 
-                    String jsonDesc = newResponse.getString("ResponseCode");
-                    JSONObject jsonResponse = newResponse.getJSONObject("ResponseCacaoAPI");
-                    String codRespuesta = jsonResponse.getString("CodRespuesta");
+                    //String jsonDesc = response.getString("ResponseCode");
+                    //JSONObject jsonResponse = newResponse.getJSONObject("ResponseCacaoAPI");
+                    String codRespuesta = response.getString("CodRespuesta");
 
                     if(codRespuesta.equals("0000")){
                         //List<Tarjeta> cardList = new ArrayList<>();
-                        JSONObject jsonSaldo = jsonResponse.getJSONArray("SaldoActual").getJSONObject(0);
+                        JSONObject jsonSaldo = response.getJSONArray("SaldoActual").getJSONObject(0);
                         System.out.println(jsonSaldo.toString());
                         Tarjeta card = new Tarjeta(
                                 new Usuario(getContext()).getNumTarjetaInicial(),
-                                jsonResponse.getString("DescripcionStatus"),
-                                jsonResponse.getString("CuentaCacao"),
-                                jsonResponse.getString("FechaVigencia"),
+                                response.getString("DescripcionStatus"),
+                                response.getString("CuentaCacao"),
+                                response.getString("FechaVigencia"),
                                 jsonSaldo.getString("Saldo")
                         );
                         tarjetas.add(card);
                         tarjetaAdapter.notifyDataSetChanged();
                     } else {
-                        String descRespuesta = jsonResponse.getString("DescRespuesta");
+                        String descRespuesta = response.getString("DescRespuesta");
                         new MaterialDialog.Builder(view.getContext())
                                 .positiveText("OK")
                                 .content(descRespuesta)

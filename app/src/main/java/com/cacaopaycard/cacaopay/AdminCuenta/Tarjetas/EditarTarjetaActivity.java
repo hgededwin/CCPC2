@@ -3,6 +3,7 @@ package com.cacaopaycard.cacaopay.AdminCuenta.Tarjetas;
 import android.content.Intent;
 import androidx.annotation.Nullable;
 
+import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.Utils.Format;
 import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 import com.google.android.material.textfield.TextInputLayout;
@@ -124,7 +125,9 @@ public class EditarTarjetaActivity extends AppCompatActivity {
 
 
         requestChangeNIP.addParamsString("Tarjeta", numeroTarjeta);
+        requestChangeNIP.addParamsString("Correo", new Usuario(this).getCorreo());
         requestChangeNIP.addParamsString("NIPNuevo", edtxtNip.getText().toString());
+        requestChangeNIP.addHeader("Token", new Usuario(this).getToken());
 
         requestChangeNIP.jsonObjectRequest(Request.Method.POST, URLCacao.URL_CAMBIAR_NIP, new Response.Listener<JSONObject>() {
             @Override
@@ -132,11 +135,11 @@ public class EditarTarjetaActivity extends AppCompatActivity {
                 requestChangeNIP.dismissProgressDialog();
                 Log.e(Constantes.TAG, response.toString());
                 try {
-                    JSONObject newFormat = Format.toSintaxJSON(response);
+                    //JSONObject newFormat = Format.toSintaxJSON(response);
 
-                    JSONObject responseCacaoAPI = newFormat.getJSONObject("ResponseCacaoAPI");
-                    String codeRespueste = responseCacaoAPI.getString("CodRespuesta");
-                    String descRespuesta = responseCacaoAPI.getString("DescRespuesta");
+                    //JSONObject responseCacaoAPI = newFormat.getJSONObject("ResponseCacaoAPI");
+                    String codeRespueste = response.getString("CodRespuesta");
+                    String descRespuesta = response.getString("DescRespuesta");
                     System.out.println("Card edited:"+ numeroTarjeta);
 
                     if(codeRespueste.equals("0000")){
