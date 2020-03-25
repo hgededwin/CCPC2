@@ -1,5 +1,7 @@
 package com.cacaopaycard.cacaopay.mvp.cardInfo;
 
+import android.content.Context;
+
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
 
 public class CardPresenter implements CardInteractor.CardBalanceRequest{
@@ -17,8 +19,8 @@ public class CardPresenter implements CardInteractor.CardBalanceRequest{
         view.showProgress();
     }
 
-    public void lockUnlockCard(boolean statusDesired, String cardNumber){
-        interactor.lockCard(statusDesired, cardNumber, this);
+    public void lockUnlockCard(boolean statusDesired, String cardNumber, Context context){
+        interactor.lockCard(statusDesired, cardNumber, context, this);
         view.showProgress();
     }
 

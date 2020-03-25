@@ -1,5 +1,6 @@
 package com.cacaopaycard.cacaopay.mvp.cardInfo;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -11,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.cacaopaycard.cacaopay.Modelos.Peticion;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
+import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.Utils.Format;
 
 import org.json.JSONException;
@@ -78,13 +80,14 @@ public class CardInteractor {
     }
 
 
-    public void lockCard(final boolean newStatus, final String card, final CardBalanceRequest listener){
+    public void lockCard(final boolean newStatus, final String card, final Context context, final CardBalanceRequest listener){
 
         final String urllockUnlockDesired = newStatus ? URL_BLOQUEAR_TARJETA: URL_DESBLOQUEAR_TARJETA;
         Log.e(TAG,urllockUnlockDesired);
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("Tarjeta", card);
+            jsonObject.put("Correo", new Usuario(context).getCorreo());
             jsonObject.put("MotivoBloqueo", "004");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -97,10 +100,10 @@ public class CardInteractor {
                 Log.e(TAG, response.toString());
                 try {
                     Log.e(TAG,response.toString());
-                    JSONObject newResponse = Format.toSintaxJSON(response);
+                    //JSONObject newResponse = Format.toSintaxJSON(response);
 
-                    JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
-                    String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
+                    //JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
+                    String codRespuesta = response.getString("CodRespuesta");
 
 
                     switch (codRespuesta){
@@ -124,7 +127,14 @@ public class CardInteractor {
                 Log.e(TAG, error.getMessage());
                 listener.onError("Ocurrió un error al procesar la solicitud, por favor inténtalo de nuevo.");
             }
-        });
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Token", new Usuario(context).getToken());
+                return headers;
+            }
+        };
 
         requestQueue.add(request);
     }

@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.Volley;
 import com.cacaopaycard.cacaopay.Modelos.Tarjeta;
+import com.cacaopaycard.cacaopay.Modelos.Usuario;
 import com.cacaopaycard.cacaopay.R;
 
 public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.mvp.cardInfo.CardView, CompoundButton.OnCheckedChangeListener {
@@ -125,7 +126,7 @@ public class CardFragment extends Fragment implements com.cacaopaycard.cacaopay.
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             System.out.println("Respuesta positiva switch");
-                            cardPresenter.lockUnlockCard(!estaBloqueada, card.getNumeroCuenta());
+                            cardPresenter.lockUnlockCard(!estaBloqueada, card.getNumeroCuenta(), getContext());
                         }
                     })
                     .cancelable(false)

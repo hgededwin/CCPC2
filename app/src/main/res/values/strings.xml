@@ -231,6 +231,8 @@
     <string name="id_client_param">id_client</string>
     <string name="pin_param">pin</string>
     <string name="status_desired_param">status_desired</string>
+    <string name="credencial_header">Credenciales</string>
+    <string name="token_header">Token</string>
 
     <string name="title_activity_main_container">MainContainer</string>
     <string name="title_home">Home</string>

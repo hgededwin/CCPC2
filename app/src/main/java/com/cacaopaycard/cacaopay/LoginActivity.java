@@ -190,6 +190,7 @@ public class LoginActivity extends AppCompatActivity {
 
         peticionLogin.addParamsString("Correo", edtxtTelefono.getText().toString());
         peticionLogin.addParamsString(getString(R.string.pass_param), edtxtPassword.getText().toString());
+        peticionLogin.addHeader(getString(R.string.credencial_header),URLCacao.CREDENCIAL_API);
 
         peticionLogin.jsonObjectRequest(Request.Method.POST, URLCacao.URL_LOGIN, new Response.Listener<JSONObject>() {
             @Override
@@ -199,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e(TAG,response.toString());
 
                 try {
-
+                    //JSONObject jsonResponse = new JSONObject(response);
                     String responseCode = response.getString("ResponseCode");
 
                     if (responseCode.equals("00")) {
@@ -212,6 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                         //usuario.setTelefono(jsonObjectLogin.getString("phone"));
                         usuario.setCorreo(response.getString("Correo"));
                         usuario.setNumTarjetaInicial(response.getString("Tarjeta"));
+                        usuario.setToken(response.getString("Token"));
                         //usuario.setNombreUsuario(jsonObjectLogin.getString("name"));
                         //usuario.setBirthDate(jsonObjectLogin.getString("birth_date"));
 
@@ -270,7 +272,7 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } else if(requestCode == RECUPERACION_PASSWORD && resultCode == RESULT_OK){
 
-            edtxtTelefono.setText(usuario.getTelefono());
+            edtxtTelefono.setText(usuario.getCorreo());
             edtxtPassword.requestFocus();
         }
     }

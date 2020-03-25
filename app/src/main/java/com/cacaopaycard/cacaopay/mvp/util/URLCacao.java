@@ -45,6 +45,7 @@ public class URLCacao {
     <string name="url_tranfer_send">https://cocoa.cacaopaycard.com/api/v1/transfer_send</string>
     <string name="url_init_transfer">https://cocoa.cacaopaycard.com/api/v1/transfer</string>
     <string name="url_lock_unlock">https://cocoa.cacaopaycard.com/api/v1/locks_blocks_cards</string>
-
      */
+
+    public static final String CREDENCIAL_API = "OEM1RUQxOTU5QzZBNDA2MTY0M0FGMENDM0YxOTRDODk1MzU1M0ExQUE4QUY2MzM3OkMzOTdEQUUxMzEzOThDMDVGREE3MTM1OTcxRkVBN0E4RTRBRjk0QUNGOTQwM0I0MA==";
 }
