@@ -101,9 +101,9 @@ public class PerfilFragment extends Fragment implements View.OnClickListener {
         txtCancelar = view.findViewById(R.id.btn_cancelar_perfil);
         imgInfoCambio = view.findViewById(R.id.img_alert_info_edit);
 
-        String strNombre = usuario.getNombreUsuario().isEmpty() ? "José Pérez" : usuario.getNombreUsuario();
-        String strCorreo = usuario.getCorreo().isEmpty() ? "cacao@cacaopay.com" : usuario.getCorreo();
-        String strTelefono = usuario.getTelefono().isEmpty() ? "5512933445" : usuario.getTelefono();
+        String strNombre = usuario.getNombreUsuario().isEmpty() ? "Nombre no registrado" : usuario.getNombreUsuario();
+        String strCorreo = usuario.getCorreo().isEmpty() ? "Correo no registrado" : usuario.getCorreo();
+        String strTelefono = usuario.getTelefono().isEmpty() ? "Teléfono no registrado" : usuario.getTelefono();
 
         edtxtTitular.setText(strNombre);
         txtTitular.setText(strNombre);

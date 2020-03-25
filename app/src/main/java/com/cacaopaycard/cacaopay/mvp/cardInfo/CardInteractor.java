@@ -68,7 +68,7 @@ public class CardInteractor {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.toString());
-                listener.onError("Ocurrió un error al obtener la información del ususario, por favor inténtalo de nuevo.");
+                listener.onError("Ocurrió un error al obtener la información del usuario, por favor inténtalo de nuevo.");
             }
         }){
             @Override
@@ -100,7 +100,7 @@ public class CardInteractor {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.toString());
-                listener.onError("Ocurrió un error al obtener la información del ususario, por favor inténtalo de nuevo.");
+                listener.onError("Ocurrió un error al obtener la información del usuario, por favor inténtalo de nuevo.");
             }
         }){
             @Override
@@ -134,7 +134,8 @@ public class CardInteractor {
             public void onResponse(JSONObject response) {
                 Log.e(TAG, response.toString());
                 try {
-                    Log.e(TAG,response.toString());
+
+                    //Log.e(TAG,response.toString());
                     //JSONObject newResponse = Format.toSintaxJSON(response);
 
                     //JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");

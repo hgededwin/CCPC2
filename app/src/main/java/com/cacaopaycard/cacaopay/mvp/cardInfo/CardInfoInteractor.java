@@ -125,7 +125,7 @@ public class CardInfoInteractor {
             public void onErrorResponse(VolleyError error) {
                 requestN.dismissProgressDialog();
                 Log.e(TAG, error.toString());
-                listener.onError("Ocurrió un error al obtener la información del ususario, por favor inténtalo de nuevo.");
+                listener.onError("Ocurrió un error al obtener la información del usuario, por favor inténtalo de nuevo.");
             }
         });
 
