@@ -81,6 +81,7 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         setUpUI();
 
         if (toTransfer == Constantes.CUENTAS_CACAO) {
+
             tilCard.setHint("Tarjeta");
             edtxtNumCardSend.setFilters(new InputFilter[] {new InputFilter.LengthFilter(19)});
             tilRFC.setVisibility(View.GONE);
@@ -92,6 +93,7 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
             tilRFC.setVisibility(View.VISIBLE);
             tilEmail.setVisibility(View.VISIBLE);
             esInterbancaria = true;
+
         }
 
         requestQueue = Volley.newRequestQueue(this);
@@ -122,8 +124,18 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
             initTransferOwnerRequest();
 
         } else {
+
+
+            if(edtxtRFC.getText().toString().isEmpty()){
+                tilRFC.setError("Debe ingresar el RFC.");
+            } else if(edtxtEmail.getText().toString().isEmpty()){
+                tilEmail.setError("Debe ingresar el email.");
+            } else {
                 Log.i(Constantes.TAG, "Es interbancaria");
                 transferThirdsRequest();
+            }
+
+
         }
     }
 
@@ -454,8 +466,7 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         txtSaldo = findViewById(R.id.txt_saldo_tarjeta_cv_transferencia);
         edtxtEmail = findViewById(R.id.edtxt_email_beneficiario);
         edtxtRFC = findViewById(R.id.edtxt_rfc_beneficiario);
-
-
+        
         txtNumCuentacv.setText("**** " + numTarjetaEmisora.substring(12));
         txtSaldo.setText(strSaldo);
 
