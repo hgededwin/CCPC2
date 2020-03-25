@@ -280,6 +280,7 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
 
         final Peticion peticionTransferOthers = new Peticion(this,requestQueue);
 
+        peticionTransferOthers.addParamsString("Correo", usuario.getCorreo());
         peticionTransferOthers.addParamsString("Tarjeta", numTarjetaEmisora);
         peticionTransferOthers.addParamsString("NombreBeneficiario", edtxtNomBene.getText().toString());
         peticionTransferOthers.addParamsString("CuentaBeneficiario", edtxtNumCardSend.getRowText());
@@ -288,6 +289,7 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
         peticionTransferOthers.addParamsString("ReferenciaNumerica", edtxtNumRef.getText().toString());
         peticionTransferOthers.addParamsString("Monto", edtxtMonto.getText().toString().replaceAll("[$|,]",""));
         peticionTransferOthers.addParamsString("EMailBeneficiario", edtxtEmail.getText().toString());
+        peticionTransferOthers.addHeader("Token", usuario.getToken());
 
         peticionTransferOthers.jsonObjectRequest(Request.Method.POST, URLCacao.URL_TRANSFERENCIA_SPEI, new Response.Listener<JSONObject>() {
             @Override
@@ -295,11 +297,11 @@ private final String TAG_SPEI = "TRANSFERENCIASPEI";
                 peticionTransferOthers.dismissProgressDialog();
                 Log.e(Constantes.TAG, response.toString());
                 try {
-                    JSONObject newResponse = Format.toSintaxJSON(response);
+                    //JSONObject newResponse = Format.toSintaxJSON(response);
 
-                    JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
-                    String codRespuesta = responseCacaoAPI.getString("CodRespuesta");
-                    String descRespuesta = responseCacaoAPI.getString("DescRespuesta");
+                    //JSONObject responseCacaoAPI = newResponse.getJSONObject("ResponseCacaoAPI");
+                    String codRespuesta = response.getString("CodRespuesta");
+                    String descRespuesta = response.getString("DescRespuesta");
 
                     Log.e(Constantes.TAG, response.toString());
 
