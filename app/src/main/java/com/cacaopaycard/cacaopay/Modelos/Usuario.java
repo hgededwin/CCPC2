@@ -11,6 +11,7 @@ public class Usuario {
     private String birthDate;
     private String clabe;
     private String urlAvatar;
+    private String token;
 
     private String numTarjetaInicial;
 
@@ -106,5 +107,16 @@ public class Usuario {
 
         editor.putString("numTarjetaInicial", numTarjetaInicial.replaceAll("\\s",""));
         editor.apply();
+        this.numTarjetaInicial = numTarjetaInicial;
+    }
+
+    public String getToken() {
+        return preferences.getString("token", "");
+    }
+
+    public void setToken(String token) {
+        editor.putString("token", token);
+        editor.apply();
+        this.token = token;
     }
 }

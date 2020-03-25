@@ -91,7 +91,7 @@
             android:layout_marginRight="40dp"
             android:inputType="number"
             android:itemBackground="@drawable/edtxt_gray_corner"
-            app:itemCount="6"
+            app:itemCount="8"
             app:itemHeight="34dp"
             app:itemWidth="34dp"
             app:lineColor="@android:color/transparent" />
@@ -128,13 +128,14 @@
             android:layout_height="@dimen/button_height"
             android:layout_marginTop="0dp"
             android:onClick="onClickMandarCodigo"
-            android:text="@string/str_siguiente"
+            android:text="@string/str_verificar"
             android:layout_marginRight="@dimen/margin_side"
             android:layout_marginLeft="@dimen/margin_side"
 
             />
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/linear_reenvio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

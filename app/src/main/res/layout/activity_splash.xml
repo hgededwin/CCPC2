@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBluePrimary"
+    android:background="#000000"
     android:gravity="center_horizontal"
     tools:context=".SplashActivity"
     >
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/icono_cacao"
+        android:src="@drawable/splash"
         />
 
 </LinearLayout>

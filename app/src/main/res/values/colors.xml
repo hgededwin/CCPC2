@@ -4,8 +4,8 @@
 
 
     <!-- Customize here. -->
-    <color name="colorBluePrimary">#00263D</color> <!--Base Color -->
-    <color name="colorGreenPrimary">#6FBF4A</color> <!-- Accent Color -->
+    <color name="colorBluePrimary">#000000</color> <!--Base Color -->
+    <color name="colorGreenPrimary">#808080</color> <!-- Accent Color -->
     <!-- End customize -->
 
     <color name="colorPrimary">#008577</color>

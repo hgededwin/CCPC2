@@ -203,53 +203,6 @@ public class RecuperacionPassInPhoneActivity extends AppCompatActivity {
             }
         });
 
-      /*  peticion.stringRequest(Request.Method.POST, URLCacao.URL_RECUPERAR_PASSWORD, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                peticion.dismissProgressDialog();
-                Log.e(Constantes.TAG, response.toString());
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    System.out.println(jsonObject);
-
-                    int success = jsonObject.getInt("succes");
-                    String message  = jsonObject.getString("message");
-
-                    if(success == 1){
-                        if(emailPhone == PHONE) {
-                            Log.i(Constantes.TAG, message);
-                            usuario.setTelefono(edtxtEmailPhone.getText().toString());
-                            Intent intent = new Intent(RecuperacionPassInPhoneActivity.this, RecuperacionPasswordActivity.class);
-                            startActivityForResult(intent, RECUPERACION_PASSWORD);
-                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                        } else {
-                            usuario.setCorreo(edtxtEmail.getText().toString());
-                            Intent intent = new Intent(RecuperacionPassInPhoneActivity.this, RecuperacionPasswordActivity.class);
-                            startActivityForResult(intent, RECUPERACION_PASSWORD);
-                            overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                        }
-
-                    } else {
-                        if(emailPhone == EMAIL) {
-                            Log.e(Constantes.TAG, message);
-                            new MaterialDialog.Builder(RecuperacionPassInPhoneActivity.this)
-                                    .content(message)
-                                    .positiveText("Ok")
-                                    .show();
-                        } else
-                            forgotPass(EMAIL);
-                    }
-
-                    Intent intent = new Intent(RecuperacionPassInPhoneActivity.this, RecuperacionPasswordActivity.class);
-                    startActivityForResult(intent,RECUPERACION_PASSWORD);
-                    overridePendingTransition(R.anim.left_in,R.anim.left_out);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });*/
 
     }
 }

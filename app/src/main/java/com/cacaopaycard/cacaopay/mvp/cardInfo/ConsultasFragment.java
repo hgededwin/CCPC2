@@ -288,6 +288,7 @@ public class ConsultasFragment extends Fragment implements CardInfoView, ViewPag
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "Request: " + requestCode + " result: " + resultCode);
         if (requestCode == 0 && resultCode == RESULT_OK){
             onPageSelected(pager.getCurrentItem());
         }

@@ -96,8 +96,10 @@ public class RegistroExitosoActivity extends AppCompatActivity {
 
             case ENVIO_PASSWORD:
 
+                usuario.registrarUsuario();
                 setResult(RESULT_OK);
                 finish();
+                break;
 
             case REGISTRO:
                 // registro
@@ -127,6 +129,11 @@ public class RegistroExitosoActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 break;
             case RECUPERACION_PASSWORD:
+                setResult(RESULT_OK);
+                finish();
+                break;
+
+            case ENVIO_PASSWORD:
                 setResult(RESULT_OK);
                 finish();
                 break;

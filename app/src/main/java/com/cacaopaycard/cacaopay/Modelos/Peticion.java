@@ -26,6 +26,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.cacaopaycard.cacaopay.Constantes;
 import com.cacaopaycard.cacaopay.R;
 import com.cacaopaycard.cacaopay.SplashActivity;
+import com.cacaopaycard.cacaopay.mvp.util.URLCacao;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -104,7 +105,7 @@ public class Peticion {
         ){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                headers.put("Content-Type", "application/json; charset=utf-8");
+                // headers.put("Content-Type", "application/json; charset=utf-8");
                 if (headers.isEmpty()){
                     return super.getHeaders();
                 }
@@ -164,6 +165,7 @@ public class Peticion {
             }
 
         };
+
         if (mostrarProgressDialog)
             progressDialog.show();
         requestQueue.add(stringRequest);
@@ -173,11 +175,24 @@ public class Peticion {
     public void jsonObjectRequest(int methodRequest, String url, Response.Listener listener, Response.ErrorListener error){
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(methodRequest,url,jsonObject,listener,error){
-
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (headers.isEmpty()){
+                    return super.getHeaders();
+                }
+                else{
+                    return headers;
+                }
+            }
         };
         if (mostrarProgressDialog){
             progressDialog.show();
         }
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
         requestQueue.add(jsonObjectRequest);
 
     }
@@ -185,11 +200,24 @@ public class Peticion {
     public void jsonObjectRequest(int methodRequest, String url,JSONObject params, Response.Listener listener, Response.ErrorListener error){
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(methodRequest,url,params,listener,error){
-
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (headers.isEmpty()){
+                    return super.getHeaders();
+                }
+                else{
+                    return headers;
+                }
+            }
         };
         if (mostrarProgressDialog){
             progressDialog.show();
         }
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
         requestQueue.add(jsonObjectRequest);
 
     }
@@ -217,7 +245,15 @@ public class Peticion {
                 }
             }
         }){
-
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (headers.isEmpty()){
+                    return super.getHeaders();
+                }
+                else{
+                    return headers;
+                }
+            }
         };
         if (mostrarProgressDialog){
             progressDialog.show();
@@ -253,7 +289,15 @@ public class Peticion {
                 }
             }
         }){
-
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (headers.isEmpty()){
+                    return super.getHeaders();
+                }
+                else{
+                    return headers;
+                }
+            }
         };
         if (mostrarProgressDialog){
             progressDialog.show();
@@ -348,6 +392,9 @@ public class Peticion {
         progressDialog.dismiss();
     }
     public void addHeader(String key, String value){
+        headers.put(key, value);
+    }
+    public void addHeaderForJsonRequest(String key, String value){
         headers.put(key, value);
     }
     public void addParams(String key, String value){

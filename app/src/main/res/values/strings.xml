@@ -2,18 +2,18 @@
 
     <!-- Customize here -->
 
-    <string name="app_name">CacaoPay</string>
+    <string name="app_name">Kapital</string>
 
     <!-- Mensajes onBoarding -->
-    <string name="str_intro_uno">Cacao te permite transferir entre cuentas del mismo banco, asi como a bancos de terceros.</string>
+    <string name="str_intro_uno">Kapital te permite transferir entre cuentas del mismo banco, asi como a bancos de terceros.</string>
     <string name="str_intro_dos">Recibe pagos de tus contactos y usa tus tarjetas en cualquier establecimiento.</string>
     <string name="str_intro_tres">Ten siempre a la mano tus estados de cuenta y los movimientos de cada tarjeta.</string>
 
 
-    <string name="str_mensaje_ayuda">Contáctanos a traves de la cuenta de correo <font color="#5BA0A6"><b>cacaohelp@cacaopaycard.com</b></font> para cualquier duda o aclaración sobre tus cuentas o cualquier otro aspecto relacionado con la aplicación.</string>
+    <string name="str_mensaje_ayuda">Contáctanos a traves de la cuenta de correo <font color="#5BA0A6"><b>help@kapital.com</b></font> para cualquier duda o aclaración sobre tus cuentas o cualquier otro aspecto relacionado con la aplicación.</string>
     <string name="str_mensaje_para_compartir">¡Hola! Te comparto mis datos bancarios para transferir dinero a mi cuenta. \nMi número de tarjeta para enviarme dinero solo desde otra cuenta Cacao es: \n%1$s\n\nMi número de cuenta CLABE para enviarme dinero desde cualquier otro banco (SPEI) es: \n%2$s\n\nBanco STP.</string>
-    <string name="str_tarjeta_cuenta_cacao">Ingresa cuenta cacao</string>
-    <string name="support_email">cacaohelp@cacao.com</string>
+    <string name="str_tarjeta_cuenta_cacao">Ingresa cuenta Kapital</string>
+    <string name="support_email">help@kapital.com</string>
 
     <!-- End customize -->
 
@@ -29,8 +29,8 @@
 
 
     <!-- Verififcaion de código -->
-    <string name="str_verif_2_pasos">Verificación de número</string>
-    <string name="str_ingresar_codigo">Introduce el código de activación que te hemos enviado</string>
+    <string name="str_verif_2_pasos">Verificación de cuenta</string>
+    <string name="str_ingresar_codigo">Introduce el código de activación que te hemos enviado a tu correo electrónico</string>
     <string name="str_reenviar_codigo">Reenviar código por</string>
     <string name="str_sms">SMS</string>
     <string name="str_email_SMS">Email y SMS</string>
@@ -231,6 +231,8 @@
     <string name="id_client_param">id_client</string>
     <string name="pin_param">pin</string>
     <string name="status_desired_param">status_desired</string>
+    <string name="credencial_header">Credenciales</string>
+    <string name="token_header">Token</string>
 
     <string name="title_activity_main_container">MainContainer</string>
     <string name="title_home">Home</string>
